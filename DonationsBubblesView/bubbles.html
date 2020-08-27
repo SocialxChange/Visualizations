@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="twitter:card" content="player" />
+<meta name="twitter:title" content="Donaciones Sociales Fondo Mixto" />
+<meta name="twitter:site" content="@SxCOrg" />
+<meta name="twitter:creator" content="@sebacea" />
+<meta name="twitter:player" content="https://sebacea.github.io/DonationsBubblesView/bubbles.html" />
+<meta name="twitter:player:width" content="517" />
+<meta name="twitter:player:height" content="408" />
+<meta name="twitter:description" content="Evolución de las donaciones sociales" />
+<meta name="twitter:image" content="https://socialxchange.github.io/Visualizations/DonationsBubblesView/DonationsBubblesView.png" />
+  <title>Donaciones Sociales 2013-2016 por proyecto</title>
+  <meta name="description" content="Visualización Burbujas Donaciones Sociales 2014-2016">
+  <meta name="author" content="Sebastián Cea en base a código de Jim Vallandingham">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/bubble_chart.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Donaciones Sociales 2013-2016 por proyecto</h1>
+    <div id="toolbar">
+      <a href="#" id="all" class="button active">Todos</a>
+      <a href="#" id="year" class="button">Por año</a>
+    </div>
+    <div id="vis"></div>
+
+    <div class="footer">
+      <p>Leyenda: <font color="#d84b2a"> Primer tercio montos (rojo)</font>, <font color="#beccae">  Segundo tercio montos (verde claro)</font>, <font color="#7aa25c">Tercer tercio montos (verde oscuro) </font></p>
+      <p>Datos: <a href="http://sociedadcivil.ministeriodesarrollosocial.gob.cl/donaciones-recibidas/">División Cooperación Público Privada - Ministerio Desarrollo Social, Chile</a>
+      <p>Blog y Código original en JavaScript y  D3.js: <a href="http://vallandingham.me/bubble_charts_in_js.html">Blog Post</a> | <a href="https://github.com/vlandham/bubble_chart">Code</a></p>
+    </div>
+  </div>
+
+  <script src="lib/d3.js"></script>
+  <script src="src/tooltip.js"></script>
+  <script src="src/bubble_chart.js"></script>
+
+  <!-- PLEASE REMOVE AFTER CLONING -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-106063721-1', 'auto');
+  ga('send', 'pageview');
+
+  </script>
+  <!-- END REMOVE -->
+
+
+</body>
+</html>

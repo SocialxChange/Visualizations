@@ -2,7 +2,7 @@ library(readr)
 library(tidyverse)
 library(esquisse)
 
-data <- read_delim("Downloads/astoreca.csv", 
+data <- read_delim("Priorizatec/data.csv", 
                       ";", escape_double = FALSE, trim_ws = TRUE)
 data$entrega <- as.numeric(data$entrega)  
 data$comconpers <- as.numeric(data$comconpers)  
@@ -11,15 +11,15 @@ data$motivación <- as.numeric(data$motivación)
 data$diagnostico[which(data$diagnostico==1)] <- 2
 data$diagnostico[which(data$diagnostico==0.5)] <- 1
 
-data$diagnostico[which(data$diagnostico==2)] <- "2 Pruebas"
-data$diagnostico[which(data$diagnostico==1)] <- "1 Prueba"
-data$diagnostico[which(data$diagnostico==0)] <- "Ninguna"
+# data$diagnostico[which(data$diagnostico==2)] <- "2 Pruebas"
+# data$diagnostico[which(data$diagnostico==1)] <- "1 Prueba"
+# data$diagnostico[which(data$diagnostico==0)] <- "Ninguna"
 
 
 data$diagnostico <- as.factor(data$diagnostico)
 
 df <- data %>% filter(!is.na(comconpers)) %>% filter(!is.na(entrega))
-esquisser(df)
+# esquisser(df)
 
 library(plotly)
 
@@ -30,6 +30,7 @@ plot <- ggplot(df) +
   labs(x = "Tareas", y = "Conectividad", color = "Motivación", size = "Diagnóstico") +
   theme_minimal()
 
+plot
 
 priori <- ggplotly(plot)
 

@@ -1,0 +1,88 @@
+---
+title: "ETL template"
+output: html_notebook
+---
+
+
+# R approach
+
+```{r message=FALSE, warning=FALSE}
+# library(readxl)
+# Archivo origen 
+# http://sociedadcivil.ministeriodesarrollosocial.gob.cl/wp-content/uploads/2021/03/Donaciones_2019.xlsx
+# data <- read_excel("~/Downloads/Donaciones_2019.xlsx", 
+    # col_types = c("numeric", "date", "text", 
+    #     "text", "text", "numeric", "numeric", 
+    #     "numeric"))
+# save(data,file="data_local/Donaciones2019.RData")
+load("../data_local/Donaciones2019.RData")
+Proyecto <- data.frame(id=1:length(levels(as.factor(data$`NOMBRE DEL PROYECTO`))),
+                       nombre=levels(as.factor(data$`NOMBRE DEL PROYECTO`)))
+Donatarios <- data.frame(id=1:length(levels(as.factor(data$DONATARIO))),
+                         nombre=levels(as.factor(data$DONATARIO)))
+Donantes <- data.frame(id=1:length(levels(as.factor(data$DONANTE))),
+                         nombre=levels(as.factor(data$DONANTE)))
+```
+
+## Cruzar información
+
+Enriquecer datos con:
+
+- SII
+
+```{r}
+# Descargamos datos del SII
+# 143.7 MB
+# download.file("https://www.sii.cl//estadisticas/nominas/PUB_Empresas_AT2015_AT2019_202101.xlsb", destfile = "PUB_Empresas_AT2015_AT2019_202101.xlsb")
+# Los datos están en un amigable formato xlsb que se puede leer en R con la librería readxlsb
+# Se debe instalar inicialmente si no está instalada
+# install.packages("readxlsb")
+library(readxlsb)
+# La lectura de la tabla arroja una lista de la cual extraemos la tabla "result"
+df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC_2018", debug = TRUE)[["result"]]
+```
+
+- Registro Ley 19862
+
+[Ejemplo de ficha de organización](https://www.registros19862.cl/fichas/ver/rut/65032490/clase/5)
+
+
+# Python approach via reticulate
+
+Para configurar Python, seguir [este tutorial](https://support.rstudio.com/hc/en-us/articles/360023654474-Installing-and-Configuring-Python-with-RStudio).
+
+```{r}
+# knitr::knit_engines$set(python = reticulate::eng_python)
+library(reticulate)
+# Use other python
+# use_python("/home/sebastian/.pyenv/shims/python")
+# Check python config
+# py_config()
+# Command line python
+# repl_python()
+# Verify conda environments
+# conda_list()
+# indicate that we want to use a specific condaenv
+# use_condaenv("r-reticulate")
+# Install package in default conda environment "r-reticulate"
+# py_install("pandas")
+# py_install("time")
+# py_install("matplotlib")
+# Unable to install the following
+# py_install("math")
+# ImportError: Missing optional dependency 'xlrd'. Install xlrd >= 1.0.0 for Excel support Use pip or conda to install xlrd.
+# py_install("xlrd")
+# Install package in specific environment "environment-name"
+# virtualenv_install("environment-name", "scipy")
+# Problem: 
+# QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-sebastian'
+# No protocol specified
+# qt.qpa.screen: QXcbConnection: Could not connect to display :0
+# Could not connect to any X display.
+# Solution found on https://community.rstudio.com/t/how-to-display-the-plot-in-the-python-chunk/22039/2
+matplotlib <- import("matplotlib")
+matplotlib$use("Agg", force = TRUE)
+```
+
+
+

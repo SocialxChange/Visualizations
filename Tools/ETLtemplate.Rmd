@@ -37,9 +37,12 @@ Enriquecer datos con:
 # Los datos están en un amigable formato xlsb que se puede leer en R con la librería readxlsb
 # Se debe instalar inicialmente si no está instalada
 # install.packages("readxlsb")
-library(readxlsb)
-# La lectura de la tabla arroja una lista de la cual extraemos la tabla "result"
-df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC_2018", debug = TRUE)[["result"]]
+# library(readxlsb)
+# OJO que esto Cuelga el computador
+# df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC_2018", debug = TRUE)
+library(readr)
+dataSII <- read_delim("../data_local/PUB_Empresas_AT2015_AT2019_202101.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
 ```
 
 - Registro Ley 19862
@@ -49,13 +52,13 @@ df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC
 
 # Python approach via reticulate
 
-Para configurar Python, seguir [este tutorial](https://support.rstudio.com/hc/en-us/articles/360023654474-Installing-and-Configuring-Python-with-RStudio).
+Instalar Anaconda previamente. Sino, para configurar Python, seguir [este tutorial](https://support.rstudio.com/hc/en-us/articles/360023654474-Installing-and-Configuring-Python-with-RStudio).
 
 ```{r}
 # knitr::knit_engines$set(python = reticulate::eng_python)
 library(reticulate)
-# Use other python
-# use_python("/home/sebastian/.pyenv/shims/python")
+# Use specific python
+use_python("/home/scea/anaconda3/bin/python")
 # Check python config
 # py_config()
 # Command line python
@@ -68,10 +71,6 @@ library(reticulate)
 # py_install("pandas")
 # py_install("time")
 # py_install("matplotlib")
-# Unable to install the following
-# py_install("math")
-# ImportError: Missing optional dependency 'xlrd'. Install xlrd >= 1.0.0 for Excel support Use pip or conda to install xlrd.
-# py_install("xlrd")
 # Install package in specific environment "environment-name"
 # virtualenv_install("environment-name", "scipy")
 # Problem: 
@@ -84,5 +83,9 @@ matplotlib <- import("matplotlib")
 matplotlib$use("Agg", force = TRUE)
 ```
 
+
+```{python}
+r.data.head()
+```
 
 

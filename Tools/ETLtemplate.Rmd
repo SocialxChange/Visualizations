@@ -26,6 +26,26 @@ Donantes <- data.frame(id=1:length(levels(as.factor(data$DONANTE))),
                          nombre=levels(as.factor(data$DONANTE)))
 ```
 
+
+# Análisis exploratorio
+
+```{r}
+# nrow(data %>% filter(`DONATARIO`=="Fundación Jóvenes por una América Solidaria (América Solidaria)") %>% select(`NOMBRE DEL PROYECTO`))
+# data$DONATARIO <- as.character(data$DONATARIO)
+# proyectos <- unique(data %>% filter(`DONATARIO`=="Fundación Jóvenes por una América Solidaria (América Solidaria)") %>% select(`NOMBRE DEL PROYECTO`))
+df <- data.frame(monto=c(1,2,3,4),proyecto=c("a","a","b","b"),donatario=c("x","x","x","x"),fecha=c(1,2,1,2),donante=c("j","k","l","n"),donaa=c(1,1,0,0),donab=c(0,0,1,1))
+df
+```
+
+## Modelos
+
+$$monto_i=\alpha+\beta_1\cdot Trimestre_i+\beta_2\cdot PersonaJurídica_i+\begin{cases} \overbrace{\beta_3\cdot Trabajadores_i+\beta_4\cdot TramoVentas_i}^{\text{sólo Personas Jurídicas}}\\...\\\underbrace{\beta_5\cdot Genero_i+\beta_6\cdot GSE_i}_{\text{sólo Personas Naturales}}\end{cases}+...+\epsilon_i$$
+### Variable dependiente limitada
+
+$$\underbrace{Prob(\text{Dona a a})}_{donaa}=F(\alpha+\beta\cdot donante_i+\epsilon_i>0)$$
+
+$$\underbrace{Prob(\text{Dona a b})}_{donab}=F(\alpha+\beta\cdot donante_i+\epsilon_i>0)$$
+
 ## Cruzar información
 
 Enriquecer datos con:

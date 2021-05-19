@@ -62,9 +62,11 @@ Enriquecer datos con:
 # library(readxlsb)
 # OJO que esto Cuelga el computador
 # df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC_2018", debug = TRUE)
-library(readr)
-dataSII <- read_delim("../data_local/PUB_Empresas_AT2015_AT2019_202101.csv", 
+# library(readr)
+# dataSII <- read_delim("../data_local/PUB_Empresas_AT2015_AT2019_202101.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
+# save(dataSII,file="dataSII.RData")
+load("../data_local/dataSII.RData")
 ```
 
 - Registro Ley 19862
@@ -80,7 +82,7 @@ Instalar Anaconda previamente. Sino, para configurar Python, seguir [este tutori
 # knitr::knit_engines$set(python = reticulate::eng_python)
 library(reticulate)
 # Use specific python
-use_python("/home/scea/anaconda3/bin/python")
+# use_python("/home/scea/anaconda3/bin/python")
 # Check python config
 # py_config()
 # Command line python
@@ -107,7 +109,8 @@ matplotlib$use("Agg", force = TRUE)
 
 
 ```{python}
-r.data.head()
+data=r.data.head()
+
 ```
 
 

@@ -1,0 +1,35 @@
+---
+title: "Plantilla Reportes"
+output: html_document
+runtime: shiny
+---
+
+Este reporte es un ejemplo de trabajo con bases de datos de prueba (que vienen por defecto en R).^[El original está explicado [aquí](https://bookdown.org/yihui/rmarkdown/shiny-start.html) y muestra una herramienta que usaremos en detalle para construir dahsboards.] Las tablas y visualización responden automáticamente a un selector
+
+# Datos de Autos
+
+```{r, echo=FALSE}
+numericInput("rows", "¿Cuántos autos?", 5)
+
+renderTable({
+  head(cars, input$rows)
+})
+```
+
+
+# Datos de volcanes
+
+Para estos datos se modela la variable de espera y la visualización de histograma muestra la función de densidad de probabilidad que es la marginal de la función de probabilidad acumulada $F(x)=Prob(x\leq X)$. Notar que tanto como expresiones $\LaTeX$ como cálculos se pueden incrustar directamente en el documento. Por ejemplo, el valor del promedio de la variable de espera del histograma es `r mean(faithful[,2])`.
+
+
+```{r, echo=FALSE}
+sliderInput("bins", "Number of bins:", 30, min = 1, max = 50)
+
+renderPlot({
+  x    = faithful[, 2]  # Old Faithful Geyser data
+  bins = seq(min(x), max(x), length.out = input$bins + 1)
+
+  # draw the histogram with the specified number of bins
+  hist(x, breaks = bins, col = 'darkgray', border = 'white')
+})
+```

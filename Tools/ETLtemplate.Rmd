@@ -9,15 +9,15 @@ output: html_notebook
 Descargar datos de [este link](https://drive.google.com/drive/folders/1wzyn9IYyV6gvXrvYFraTxPJQxk1exVTx?usp=sharing) previa petición de autorización.
 
 ```{r message=FALSE, warning=FALSE}
-# library(readxl)
+ library(readxl)
 # Archivo origen 
 # http://sociedadcivil.ministeriodesarrollosocial.gob.cl/wp-content/uploads/2021/03/Donaciones_2019.xlsx
-# data <- read_excel("~/Downloads/Donaciones_2019.xlsx", 
-    # col_types = c("numeric", "date", "text", 
-    #     "text", "text", "numeric", "numeric", 
-    #     "numeric"))
-# save(data,file="data_local/Donaciones2019.RData")
-load("../data_local/Donaciones2019.RData")
+ data <- read_excel("~/Donaciones_2019.xlsx", 
+    col_types = c("numeric", "date", "text", 
+         "text", "text", "numeric", "numeric", 
+         "numeric"))
+save(data,file="~/Donaciones2019.RData")
+load("~/Donaciones2019.RData")
 Proyecto <- data.frame(id=1:length(levels(as.factor(data$`NOMBRE DEL PROYECTO`))),
                        nombre=levels(as.factor(data$`NOMBRE DEL PROYECTO`)))
 Donatarios <- data.frame(id=1:length(levels(as.factor(data$DONATARIO))),
@@ -53,7 +53,7 @@ Enriquecer datos con:
 - SII
 
 ```{r}
-# Descargamos datos del SII
+ #Descargamos datos del SII
 # 143.7 MB
 # download.file("https://www.sii.cl//estadisticas/nominas/PUB_Empresas_AT2015_AT2019_202101.xlsb", destfile = "PUB_Empresas_AT2015_AT2019_202101.xlsb")
 # Los datos están en un amigable formato xlsb que se puede leer en R con la librería readxlsb
@@ -63,10 +63,16 @@ Enriquecer datos con:
 # OJO que esto Cuelga el computador
 # df = read_xlsb("../data_local/PUB_Empresas_AT2015_AT2019_202101.xlsb", sheet="AC_2018", debug = TRUE)
 # library(readr)
-# dataSII <- read_delim("../data_local/PUB_Empresas_AT2015_AT2019_202101.csv", 
-    ";", escape_double = FALSE, trim_ws = TRUE)
-# save(dataSII,file="dataSII.RData")
-load("../data_local/dataSII.RData")
+#dataSII <- read_delim("~/SII.csv", 
+ #   ";", escape_double = FALSE, trim_ws = TRUE)
+ #save(dataSII,file="dataSII.RData")
+#load("~/dataSII.RData")
+sii <- read_excel("~/datos_SII.xlsx", col_types = c("skip", "skip","skip",  "text", "numeric","numeric", "skip","skip","skip","skip", "text", "text","skip","skip","skip","skip","skip", "text", "text", "text"))
+save(sii,file="~/DatosSII.RData")
+load("~/DatosSII.RData")
+
+
+
 ```
 
 - Registro Ley 19862
@@ -82,7 +88,7 @@ Instalar Anaconda previamente. Sino, para configurar Python, seguir [este tutori
 # knitr::knit_engines$set(python = reticulate::eng_python)
 library(reticulate)
 # Use specific python
-# use_python("/home/scea/anaconda3/bin/python")
+ use_python("/home/pia/anaconda3/bin/python")
 # Check python config
 # py_config()
 # Command line python
@@ -90,11 +96,11 @@ library(reticulate)
 # Verify conda environments
 # conda_list()
 # indicate that we want to use a specific condaenv
-# use_condaenv("r-reticulate")
+ use_condaenv("r-reticulate")
 # Install package in default conda environment "r-reticulate"
 # py_install("pandas")
 # py_install("time")
-# py_install("matplotlib")
+ py_install("fuzzywuzzy")
 # Install package in specific environment "environment-name"
 # virtualenv_install("environment-name", "scipy")
 # Problem: 
@@ -105,12 +111,388 @@ library(reticulate)
 # Solution found on https://community.rstudio.com/t/how-to-display-the-plot-in-the-python-chunk/22039/2
 matplotlib <- import("matplotlib")
 matplotlib$use("Agg", force = TRUE)
+py_install("fuzzymatcher")
+
 ```
 
 
 ```{python}
-data=r.data.head()
+import pandas as pd
+#r.data['DONANTE']
+r.sii.columns
+```
+```{r}
+names(sii) <- c("nombre", "tramo", "num_trab","tipo","subtipo","region","provincia","comuna")
+
 
 ```
+
+
+
+```{python}
+import fuzzywuzzy
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+import fuzzymatcher
+
+```
+
+```{python}
+left_on = [ 'DONANTE']
+
+right_on = ['nombre']
+```
+
+seleccion para solo un donatario: fundacion rostros nuevos (10294 filas)
+
+```{python}
+rostros=r.data[r.data['DONATARIO']=='FUNDACION ROSTROS NUEVOS']
+rostros.shape
+```
+
+subset empresas de la region metropolitana (266045 filas)
+
+```{python}
+empresas_santiago=r.sii[r.sii['region']=='XIII REGION METROPOLITANA']
+empresas_santiago.shape
+```
+
+
+fuzzy match
+
+```{python}
+matched_results = fuzzymatcher.fuzzy_left_join(rostros, empresas_santiago, left_on,right_on,left_id_col='DONANTE',right_id_col='nombre')
+```
+
+```{python}
+#matched_results
+cols = ["best_match_score", "DONANTE", "nombre", "FECHA", "NOMBRE DEL PROYECTO", "MONTO TOTAL DONACIÓN", "tramo", "num_trab", "provincia", "comuna"]
+
+matched_results[cols].sort_values(by=['best_match_score'], ascending=False)
+
+```
+
+
+# criterio de match
+Indice de similaridad > 0.5 
+
+NOTA: hay muchos casos en que una persona tiene una empresa con su nombre. 
+hay que generar una forma de distinguirlos*** ---> sugerencia: fijarse en el numero de trabajadres de la empresa
+
+
+```{python}
+match_sii=matched_results[cols].query("best_match_score > .5").sort_values(by=['best_match_score'], ascending=True)
+```
+
+guarda match
+
+```{r}
+match_sii<-py$match_sii
+save(match_sii,file="~/match_sii.RData")
+load("~/match_sii.RData")
+
+```
+
+# criterio para empresa:
+num_trab>1
+
+```{python}
+match_empresa=r.match_sii[r.match_sii['num_trab']>1.0]
+```
+
+guarda match ..caso empresa (usando criterio)
+
+```{r}
+
+match_empresa<-py$match_empresa
+save(match_empresa,file="~/match_empresa.RData")
+load("~/match_empresa.RData")
+
+```
+
+```{python}
+match_empresa.groupby(['NOMBRE DEL PROYECTO','DONANTE'])['MONTO TOTAL DONACIÓN'].sum()
+
+```
+
+
+
+```{python}
+#defincion meses
+start_date = '2018-12-31'
+ene='2019-01-31'
+feb='2019-02-28'
+mar='2019-03-31'
+abr='2019-04-30'
+may='2019-05-31'
+jun='2019-06-30'
+jul='2019-07-31'
+ago='2019-08-31'
+sept='2019-09-30'
+octu='2019-10-31'
+nov='2019-11-30'
+end_date = '2019-12-31'
+```
+
+
+```{python}
+match_empresa['FECHA']
+
+```
+
+```{python}
+match_empresa['mes']= match_empresa['FECHA'].map(lambda x: x.strftime('%m'))
+
+#match_empresa.groupby(['mes']).size()
+match_empresa
+```
+
+
+```{python}
+match_empresa.groupby(['mes','NOMBRE DEL PROYECTO','DONANTE'])['MONTO TOTAL DONACIÓN'].sum()
+
+```
+
+```{python}
+import matplotlib.pyplot as plt
+
+```
+
+
+Donaciones totales de empresas de santiago para la fundacion rostros nuevos
+
+```{python}
+
+don_empresas_mes=match_empresa.groupby(['mes'])['MONTO TOTAL DONACIÓN'].sum()
+#don_empresas_mes
+don_empresas_mes.plot()
+plt.xticks(rotation=45)
+plt.ylabel('CLP', fontsize=10)
+plt.xlabel('MES', fontsize=10)
+plt.title('Donaciones de empresas para Fundación Rostros nuevos', fontsize=10)
+
+
+plt.show()
+
+#fig = plt.figure()
+
+
+
+#plt.plot(mes, donaciones_mes, '-',markersize=12,  color='red')
+#plt.xticks(mes,rotation='vertical', fontsize=30)
+#plt.yticks(fontsize=20)
+#plt.rcParams["figure.figsize"] = (20,10)
+#plt.title('Total donaciones Chile', fontsize=20)
+#plt.ylabel('CLP', fontsize=20)
+
+#plt.show()
+```
+
+
+Donaciones TOTALES  para la fundacion rostros nuevos
+
+
+```{python}
+rostros['mes']= rostros['FECHA'].map(lambda x: x.strftime('%m'))
+rostros.groupby(['mes','NOMBRE DEL PROYECTO','DONANTE'])['MONTO TOTAL DONACIÓN'].sum()
+
+```
+
+```{python}
+don_rostros_tot=rostros.groupby(['mes'])['MONTO TOTAL DONACIÓN'].sum()
+don_rostros_tot
+don_rostros_tot.plot(label='total')
+don_empresas_mes.plot(label='empresas')
+
+plt.xticks(rotation=45)
+plt.ylabel('CLP', fontsize=10)
+plt.xlabel('MES', fontsize=10)
+plt.title('Donaciones Fundación Rostros nuevos', fontsize=10)
+plt.legend()
+
+plt.show()
+
+```
+
+personas naturales---- los que no son empresa (duh) , es decir, no tienen match en datos SII *** criterio best_match_score < 0.5
+
+```{python}
+match_personas=matched_results[cols].query("best_match_score <= .5").sort_values(by=['best_match_score'], ascending=True)
+match_personas
+```
+
+
+```{r}
+match_personas<-py$match_personas
+save(match_personas,file="~/match_personas.RData")
+load("~/match_personas.RData")
+```
+
+```{python}
+match_personas['mes']= match_personas['FECHA'].map(lambda x: x.strftime('%m'))
+match_personas
+
+
+```
+
+```{python}
+match_personas.groupby(['mes','NOMBRE DEL PROYECTO','DONANTE'])['MONTO TOTAL DONACIÓN'].sum()
+
+```
+
+```{python}
+don_personas_mes=match_personas.groupby(['mes'])['MONTO TOTAL DONACIÓN'].sum()
+don_personas_mes
+```
+
+
+```{python}
+don_rostros_tot=rostros.groupby(['mes'])['MONTO TOTAL DONACIÓN'].sum()
+don_rostros_tot
+don_rostros_tot.plot(label='total')
+#don_empresas_mes.plot(label='empresas')
+don_personas_mes.plot(label='personas')
+
+plt.xticks(rotation=45)
+plt.ylabel('CLP', fontsize=10)
+plt.xlabel('MES', fontsize=10)
+plt.title('Donaciones Fundación Rostros nuevos', fontsize=10)
+plt.legend()
+
+plt.show()
+```
+
+estadísticas descriptivas:
+fundacion rostros:
+
+
+```{python}
+rostros['MONTO TOTAL DONACIÓN']
+```
+
+
+```{python}
+rostros['MONTO TOTAL DONACIÓN'].describe() ## para total donaciones  rsotros
+print('la moda es ', rostros['MONTO TOTAL DONACIÓN'].mode())
+print('La mediana es ', rostros['MONTO TOTAL DONACIÓN'].median())
+
+```
+
+
+```{python}
+#match_empresa['MONTO TOTAL DONACIÓN']
+match_empresa['MONTO TOTAL DONACIÓN'].describe() ### para donaciones empresas rostros
+print('la moda es ', match_empresa['MONTO TOTAL DONACIÓN'].mode())
+print('La mediana es ', match_empresa['MONTO TOTAL DONACIÓN'].median())
+
+```
+
+
+```{python}
+match_personas['MONTO TOTAL DONACIÓN'].describe() ### para donaciones personas rostros
+print('la moda es ', match_personas['MONTO TOTAL DONACIÓN'].mode())
+print('La mediana es ', match_personas['MONTO TOTAL DONACIÓN'].median())
+
+```
+
+
+Distribución de donaciones rostros
+
+```{python}
+#rostros['MONTO TOTAL DONACIÓN']
+
+```
+
+
+```{python}
+plt.hist(rostros['MONTO TOTAL DONACIÓN'], bins=30, range=[0, 0.5e5])    ##rango alrededor de la moda
+plt.show()
+```
+
+
+
+
+Distribución de donaciones totales (todos los donatarios)
+
+```{python}
+r.data['MONTO TOTAL DONACIÓN'].describe() ## para total donaciones  todos los proyectos
+print('la moda es ', r.data['MONTO TOTAL DONACIÓN'].mode())
+print('La mediana es ', r.data['MONTO TOTAL DONACIÓN'].median())
+
+```
+
+
+
+```{python}
+plt.hist(r.data['MONTO TOTAL DONACIÓN'], bins=40, range=[0.,0.5e6])    ##rango alrededor de la moda
+plt.show()
+```
+
+
+
+Approach distinto: donaciones de empresas en valparaiso y viña del mar vs donaciones personas valparaiso y viña del mar
+
+subset empresas region
+
+```{python}
+empresas_vreg=r.sii[r.sii['region']=='V REGION VALPARAISO']
+empresas_vreg.shape
+```
+
+
+```{python}
+america=r.data[r.data['DONATARIO']=='Fundación Jóvenes por una América Solidaria (América Solidaria)']
+rostros.shape
+```
+
+```{python}
+left_on = [ 'DONANTE']
+
+right_on = ['nombre']
+```
+
+
+```{python}
+matched_results_2 = fuzzymatcher.fuzzy_left_join(america, empresas_vreg, left_on,right_on,left_id_col='DONANTE',right_id_col='nombre')
+
+```
+
+
+```{python}
+#matched_results
+cols = ["best_match_score", "DONANTE", "nombre", "FECHA", "NOMBRE DEL PROYECTO", "MONTO TOTAL DONACIÓN", "tramo", "num_trab", "provincia", "comuna"]
+
+matched_results_2[cols].sort_values(by=['best_match_score'], ascending=False)
+
+```
+
+```{python}
+match_sii_2=matched_results_2[cols].query("best_match_score > .5").sort_values(by=['best_match_score'], ascending=True)
+```
+
+guarda match (solo 1 match)
+
+```{r}
+match_sii_2<-py$match_sii_2
+save(match_sii_2,file="~/match_sii_2.RData")
+load("~/match_sii_2.RData")
+
+```
+
+
+
+exploracion donaciones:
+
+```{python}
+r.data.sample(20)
+
+```
+
+
+
+
+
+
+
 
 

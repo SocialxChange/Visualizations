@@ -12,12 +12,12 @@ Descargar datos de [este link](https://drive.google.com/drive/folders/1wzyn9IYyV
  library(readxl)
 # Archivo origen 
 # http://sociedadcivil.ministeriodesarrollosocial.gob.cl/wp-content/uploads/2021/03/Donaciones_2019.xlsx
- data <- read_excel("~/Donaciones_2019.xlsx", 
-    col_types = c("numeric", "date", "text", 
-         "text", "text", "numeric", "numeric", 
-         "numeric"))
-save(data,file="~/Donaciones2019.RData")
-load("~/Donaciones2019.RData")
+ # data <- read_excel("~/Donaciones_2019.xlsx", 
+ #    col_types = c("numeric", "date", "text", 
+ #         "text", "text", "numeric", "numeric", 
+ #         "numeric"))
+# save(data,file="~/Donaciones2019.RData")
+load("../data_local/Donaciones2019.RData")
 Proyecto <- data.frame(id=1:length(levels(as.factor(data$`NOMBRE DEL PROYECTO`))),
                        nombre=levels(as.factor(data$`NOMBRE DEL PROYECTO`)))
 Donatarios <- data.frame(id=1:length(levels(as.factor(data$DONATARIO))),
@@ -67,12 +67,9 @@ Enriquecer datos con:
  #   ";", escape_double = FALSE, trim_ws = TRUE)
  #save(dataSII,file="dataSII.RData")
 #load("~/dataSII.RData")
-sii <- read_excel("~/datos_SII.xlsx", col_types = c("skip", "skip","skip",  "text", "numeric","numeric", "skip","skip","skip","skip", "text", "text","skip","skip","skip","skip","skip", "text", "text", "text"))
-save(sii,file="~/DatosSII.RData")
+# sii <- read_excel("~/datos_SII.xlsx", col_types = c("skip", "skip","skip",  "text", "numeric","numeric", "skip","skip","skip","skip", "text", "text","skip","skip","skip","skip","skip", "text", "text", "text"))
+# save(sii,file="~/DatosSII.RData")
 load("~/DatosSII.RData")
-
-
-
 ```
 
 - Registro Ley 19862
@@ -88,7 +85,7 @@ Instalar Anaconda previamente. Sino, para configurar Python, seguir [este tutori
 # knitr::knit_engines$set(python = reticulate::eng_python)
 library(reticulate)
 # Use specific python
- use_python("/home/pia/anaconda3/bin/python")
+# use_python("/home/pia/anaconda3/bin/python")
 # Check python config
 # py_config()
 # Command line python
@@ -96,12 +93,13 @@ library(reticulate)
 # Verify conda environments
 # conda_list()
 # indicate that we want to use a specific condaenv
- use_condaenv("r-reticulate")
+use_condaenv("r-reticulate")
 # Install package in default conda environment "r-reticulate"
 # py_install("pandas")
 # py_install("time")
- py_install("fuzzywuzzy")
-# Install package in specific environment "environment-name"
+# py_install("fuzzywuzzy")
+# py_install("fuzzymatcher")
+ # Install package in specific environment "environment-name"
 # virtualenv_install("environment-name", "scipy")
 # Problem: 
 # QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-sebastian'
@@ -111,8 +109,6 @@ library(reticulate)
 # Solution found on https://community.rstudio.com/t/how-to-display-the-plot-in-the-python-chunk/22039/2
 matplotlib <- import("matplotlib")
 matplotlib$use("Agg", force = TRUE)
-py_install("fuzzymatcher")
-
 ```
 
 
@@ -121,10 +117,9 @@ import pandas as pd
 #r.data['DONANTE']
 r.sii.columns
 ```
+
 ```{r}
 names(sii) <- c("nombre", "tramo", "num_trab","tipo","subtipo","region","provincia","comuna")
-
-
 ```
 
 

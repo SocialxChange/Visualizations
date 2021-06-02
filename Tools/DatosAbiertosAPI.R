@@ -11,3 +11,9 @@ library("junr")
 base_url <- "https://api.datos.observatoriologistico.cl/api/v2/datastreams/"
 dataOBSLog <- get_data(base_url, api_key,"PIB-REGIO-DE-CHILE-2010")
 
+# EJEMPLO DATACHILE
+
+url <- "http://es.datachile.io/api/data?measures=FOB US&drilldowns=HS0,Comuna,Year&captions=es&parents=true"
+library(jsonlite)
+res<-fromJSON(url)
+df<-res[["data"]]

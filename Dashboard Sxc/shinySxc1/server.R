@@ -3,122 +3,7 @@ server <- function(input, output) {
     histdata <- rnorm(500)
     
     
-    output$oneBox <- renderInfoBox({
-        infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo), 1), " Personas"), icon = icon("fas fa-users"),
-            color = "aqua", fill = TRUE
-        )
-    })
-    output$progressBox <- renderInfoBox({
-        infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios), 1), " Personas"), icon = icon("fas fa-user-check"),
-            color = "purple", fill = TRUE
-        )
-    })
-    output$approvalBox <- renderInfoBox({
-        infoBox(
-            "Duracion proyectos", paste0(round(mean(data$Duracion_proyecto), 1), " Semanas"), icon = icon("fas fa-hourglass"),
-            color = "yellow", fill = TRUE
-        )
-    })
-    
-    output$oneBox2 <- renderInfoBox({
-        infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales), 1), " Personas"), icon = icon("fas fa-address-card"),
-            color = "blue", fill = TRUE
-        )
-    })
-    output$progressBox2 <- renderInfoBox({
-        colorx <- "green"
-        if (60>50) {
-            colorx <- "red"
-        }
-        infoBox(
-            "Costos", paste0("M$ ", 600), icon = icon("far fa-dollar-sign"),
-            color = colorx, fill = TRUE
-        )
-    })
-    
-    
-    
-    
-    output$oneBox3 <- renderInfoBox({
-        infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo[data$Nombre_organizacion==input$projects]), 1), " Personas"), icon = icon("fas fa-users"),
-            color = "aqua", fill = TRUE
-        )
-    })
-    output$progressBox3 <- renderInfoBox({
-        infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios[data$Nombre_organizacion==input$projects]), 1), " Personas"), icon = icon("fas fa-user-check"),
-            color = "purple", fill = TRUE
-        )
-    })
-    output$approvalBox3 <- renderInfoBox({
-        infoBox(
-            "Duracion proyectos", paste0(round(mean(data$Duracion_proyecto[data$Nombre_organizacion==input$projects]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
-            color = "yellow", fill = TRUE
-        )
-    })
-    
-    output$oneBox4 <- renderInfoBox({
-        infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales[data$Nombre_organizacion==input$projects]), 1), " Personas"), icon = icon("fas fa-address-card"),
-            color = "blue", fill = TRUE
-        )
-    })
-    output$progressBox4 <- renderInfoBox({
-        colorx <- "green"
-        if (mean(data$Costos_totales[data$Nombre_organizacion==input$projects]) > as.integer(quantile(data$Costos_totales, prob=c(0.6)))){
-            colorx <- "red"
-        }
-        infoBox(
-            "Costos", paste0("M$ " ,round(mean(data$Costos_totales[data$Nombre_organizacion==input$projects]), 1)), icon = icon("far fa-dollar-sign"),
-            color = colorx, fill = TRUE
-        )
-    })
-    output$approvalBox4 <- renderInfoBox({
-        infoBox(
-            "Lugar geográfico", paste( unlist(unique(data$Lugar_geografico[data$Nombre_organizacion==input$projects])), collapse= ', ') , icon = icon("fas fa-map-marker-alt"),
-            color = "teal", fill = TRUE
-        )
-    })
-    
-    
-    
-    
-    output$oneBox5 <- renderInfoBox({
-        infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo), 1), " Personas"), icon = icon("fas fa-users"),
-            color = "aqua", fill = TRUE
-        )
-    })
-    output$progressBox5 <- renderInfoBox({
-        infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios), 1), " Personas"), icon = icon("fas fa-user-check"),
-            color = "purple", fill = TRUE
-        )
-    })
-    output$approvalBox5 <- renderInfoBox({
-        infoBox(
-            "Duracion proyectos", paste0(round(mean(data$Duracion_proyecto), 1), " Semanas"), icon = icon("fas fa-hourglass"),
-            color = "yellow", fill = TRUE
-        )
-    })
-    
-    output$oneBox6 <- renderInfoBox({
-        infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales), 1), " Personas"), icon = icon("fas fa-address-card"),
-            color = "blue", fill = TRUE
-        )
-    })
-    output$progressBox6 <- renderInfoBox({
-        infoBox(
-            "Costos", paste0("M$ " ,round(mean(data$Costos_totales), 1)), icon = icon("far fa-dollar-sign"),
-            color = "green", fill = TRUE
-        )
-    })
-    
+
     
     output$oneBox7 <- renderInfoBox({
         infoBox(
@@ -445,31 +330,279 @@ server <- function(input, output) {
     
     output$grafico1 <- renderPlot({
         aux <- filter(data, Año==max(Año))
-        p <- ggplot(aux, aes(x = as.numeric(Año), y = Poblacion_objetivo))+
-            geom_col(aes(fill = Nombre_organizacion), width = 0.7) + coord_flip() + 
-            geom_hline(yintercept = mean(aux$Poblacion_objetivo)) + geom_hline(yintercept = sum(aux$Poblacion_objetivo)) +
-            annotate("text", x=2022.4, y=mean(aux$Poblacion_objetivo), label=paste("Promedio:",mean(aux$Poblacion_objetivo)), color="red") +
-            labs(x = "Año" , y = "Población objetivo" , fill = "Nombre organizacion" , title = "Población objetivo") + theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
-            geom_text(x=2022.4, y=mean(aux$Poblacion_objetivo), label=paste("Promedio:",mean(aux$Poblacion_objetivo))) + 
-            geom_text(x=2022.4, y=sum(aux$Poblacion_objetivo), label=paste("Total:",sum(aux$Poblacion_objetivo))) + 
-            scale_x_continuous(limits = c(2021.6, 2022.4) ,breaks = unique(aux$Año)) + 
-            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo)))
+        aux <- aux %>% 
+                group_by(Nombre_organizacion, Año) %>% 
+                summarise(Poblacion_objetivo = sum(Poblacion_objetivo))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux$Nombre_organizacion <- paste0(aux$Nombre_organizacion, ": ", aux$Poblacion_objetivo)
+        aux$Nombre_organizacion <- factor(aux$Nombre_organizacion, levels=rev(aux$Nombre_organizacion))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Poblacion_objetivo1))+
+            geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Poblacion_objetivo)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Población objetivo (Personas)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Poblacion_objetivo), label=paste("Promedio:",round(mean(aux$Poblacion_objetivo),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$Poblacion_objetivo)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) +
+            theme_igray()
         p
     })
     
     output$grafico2 <- renderPlot({
         aux <- filter(data, Año==max(Año))
-        p <- ggplot(aux, aes(x = as.numeric(Año), y = Beneficiarios))+
-            geom_col(aes(fill = Nombre_organizacion), width = 0.7) + coord_flip() + 
-            geom_hline(yintercept = mean(aux$Beneficiarios)) + geom_hline(yintercept = sum(aux$Beneficiarios)) +
-            annotate("text", x=2022.4, y=mean(aux$Beneficiarios), label=paste("Promedio:",mean(aux$Beneficiarios)), color="red") +
-            labs(x = "Año" , y = "Beneficiarios" , fill = "Nombre organización") +
-            geom_text(x=2022.4, y=mean(aux$Beneficiarios), label=paste("Promedio:",mean(aux$Beneficiarios))) + 
-            geom_text(x=2022.4, y=sum(aux$Beneficiarios), label=paste("Total:",sum(aux$Beneficiarios))) + 
-            scale_x_continuous(limits = c(2021.6, 2022.4) ,breaks = unique(aux$Año)) + 
-            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo)))
+        aux <- aux %>% 
+            group_by(Nombre_organizacion, Año) %>% 
+            summarise(Beneficiarios = sum(Beneficiarios),
+                      Poblacion_objetivo = sum(Poblacion_objetivo))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux <- aux[order(aux$Beneficiarios, decreasing = F), ]
+        aux$Beneficiarios1 <- NA
+        aux$Beneficiarios1[1] <- aux$Beneficiarios[1]
+        for (i in (2:nrow(aux))) {
+            aux$Beneficiarios1[i] <- aux$Beneficiarios[i] - aux$Beneficiarios[i-1]
+        }
+        aux$Nombre_organizacion <- paste0(aux$Nombre_organizacion, ": ", aux$Beneficiarios)
+        aux$Nombre_organizacion <- factor(aux$Nombre_organizacion, levels=rev(aux$Nombre_organizacion))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Beneficiarios1))+
+            geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Beneficiarios)) +
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización", title = "Beneficiarios (Personas)") +
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Beneficiarios), label=paste("Promedio:", round(mean(aux$Beneficiarios), 2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$Beneficiarios)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) + 
+            theme_igray()
         p
     })
+    
+    output$grafico2_1 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux %>% 
+            group_by(Nombre_organizacion, Año) %>% 
+            summarise(RRHH_totales = sum(RRHH_totales),
+                      Poblacion_objetivo = sum(Poblacion_objetivo))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux <- aux[order(aux$RRHH_totales, decreasing = F), ]
+        aux$RRHH_totales1 <- NA
+        aux$RRHH_totales1[1] <- aux$RRHH_totales[1]
+        for (i in (2:nrow(aux))) {
+            aux$RRHH_totales1[i] <- aux$RRHH_totales[i] - aux$RRHH_totales[i-1]
+        }
+        aux$Nombre_organizacion <- paste0(aux$Nombre_organizacion, ": ", aux$RRHH_totales)
+        aux$Nombre_organizacion <- factor(aux$Nombre_organizacion, levels=rev(aux$Nombre_organizacion))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = RRHH_totales1))+
+            geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$RRHH_totales)) +
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización", title = "Recursos humanos (Personas)") +
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$RRHH_totales), label=paste("Promedio:", round(mean(aux$RRHH_totales), 2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$RRHH_totales)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) + 
+            theme_igray()
+        p
+    })
+    
+    output$grafico2_2 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux %>% 
+            group_by(Nombre_organizacion, Año) %>% 
+            summarise(Costos_totales = sum(Costos_totales))
+        aux <- aux[order(aux$Costos_totales, decreasing = F), ]
+        aux$Costos_totales1 <- NA
+        aux$Costos_totales1[1] <- aux$Costos_totales[1]
+        for (i in (2:nrow(aux))) {
+            aux$Costos_totales1[i] <- aux$Costos_totales[i] - aux$Costos_totales[i-1]
+        }
+        aux$Nombre_organizacion <- paste0(aux$Nombre_organizacion, ": ", aux$Costos_totales)
+        aux$Nombre_organizacion <- factor(aux$Nombre_organizacion, levels=rev(aux$Nombre_organizacion))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Costos_totales1))+
+            geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Costos_totales)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Costos (M$)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Costos_totales), label=paste("Promedio:",round(mean(aux$Costos_totales),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Costos_totales1)*0.98), label=paste("Suma total:",sum(aux$Costos_totales)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Costos_totales1))) +
+            theme_solarized()
+        p
+    })
+    
+    output$grafico2_3 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux %>% 
+            group_by(Nombre_organizacion, Año) %>% 
+            summarise(Duracion_proyecto = sum(Duracion_proyecto))
+        aux <- aux[order(aux$Duracion_proyecto, decreasing = F), ]
+        aux$Duracion_proyecto1 <- NA
+        aux$Duracion_proyecto1[1] <- aux$Duracion_proyecto[1]
+        for (i in (2:nrow(aux))) {
+            aux$Duracion_proyecto1[i] <- aux$Duracion_proyecto[i] - aux$Duracion_proyecto[i-1]
+        }
+        aux$Nombre_organizacion <- paste0(aux$Nombre_organizacion, ": ", aux$Duracion_proyecto)
+        aux$Nombre_organizacion <- factor(aux$Nombre_organizacion, levels=rev(aux$Nombre_organizacion))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Duracion_proyecto1))+
+            geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Duracion_proyecto)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Duración proyectos (Semanas)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Duracion_proyecto1)))+
+            theme_solarized()
+        p
+    })
+    
+    
+    
+    
+    output$grafico2_4 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux$Nombre_proyecto <- paste0(aux$Nombre_proyecto, ": ", aux$Poblacion_objetivo)
+        aux$Nombre_proyecto <- factor(aux$Nombre_proyecto, levels=rev(aux$Nombre_proyecto))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Poblacion_objetivo1))+
+            geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Poblacion_objetivo)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Población objetivo (Personas)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Poblacion_objetivo), label=paste("Promedio:",round(mean(aux$Poblacion_objetivo),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$Poblacion_objetivo)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) +
+            theme_igray()
+        p
+    })
+    
+    output$grafico2_5 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux <- aux[order(aux$Beneficiarios, decreasing = F), ]
+        aux$Beneficiarios1 <- NA
+        aux$Beneficiarios1[1] <- aux$Beneficiarios[1]
+        for (i in (2:nrow(aux))) {
+            aux$Beneficiarios1[i] <- aux$Beneficiarios[i] - aux$Beneficiarios[i-1]
+        }
+        aux$Nombre_proyecto <- paste0(aux$Nombre_proyecto, ": ", aux$Beneficiarios)
+        aux$Nombre_proyecto <- factor(aux$Nombre_proyecto, levels=rev(aux$Nombre_proyecto))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Beneficiarios1))+
+            geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Beneficiarios)) +
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto", title = "Beneficiarios (Personas)") +
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Beneficiarios), label=paste("Promedio:", round(mean(aux$Beneficiarios), 2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$Beneficiarios)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) + 
+            theme_igray()
+        p
+    })
+    
+    output$grafico2_6 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
+        aux$Poblacion_objetivo1 <- NA
+        aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
+        for (i in (2:nrow(aux))) {
+            aux$Poblacion_objetivo1[i] <- aux$Poblacion_objetivo[i] - aux$Poblacion_objetivo[i-1]
+        }
+        aux <- aux[order(aux$RRHH_totales, decreasing = F), ]
+        aux$RRHH_totales1 <- NA
+        aux$RRHH_totales1[1] <- aux$RRHH_totales[1]
+        for (i in (2:nrow(aux))) {
+            aux$RRHH_totales1[i] <- aux$RRHH_totales[i] - aux$RRHH_totales[i-1]
+        }
+        aux$Nombre_proyecto <- paste0(aux$Nombre_proyecto, ": ", aux$RRHH_totales)
+        aux$Nombre_proyecto <- factor(aux$Nombre_proyecto, levels=rev(aux$Nombre_proyecto))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = RRHH_totales1))+
+            geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$RRHH_totales)) +
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto", title = "Recursos humanos (Personas)") +
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$RRHH_totales), label=paste("Promedio:", round(mean(aux$RRHH_totales), 2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Poblacion_objetivo1)*0.98), label=paste("Suma total:",sum(aux$RRHH_totales)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) + 
+            theme_igray()
+        p
+    })
+    
+    output$grafico2_7 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux[order(aux$Costos_totales, decreasing = F), ]
+        aux$Costos_totales1 <- NA
+        aux$Costos_totales1[1] <- aux$Costos_totales[1]
+        for (i in (2:nrow(aux))) {
+            aux$Costos_totales1[i] <- aux$Costos_totales[i] - aux$Costos_totales[i-1]
+        }
+        aux$Nombre_proyecto <- paste0(aux$Nombre_proyecto, ": ", aux$Costos_totales)
+        aux$Nombre_proyecto <- factor(aux$Nombre_proyecto, levels=rev(aux$Nombre_proyecto))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Costos_totales1))+
+            geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Costos_totales)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Costos (M$)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Costos_totales), label=paste("Promedio:",round(mean(aux$Costos_totales),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Costos_totales1)*0.98), label=paste("Suma total:",sum(aux$Costos_totales)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Costos_totales1))) +
+            theme_solarized()
+        p
+    })
+    
+    output$grafico2_8 <- renderPlot({
+        aux <- filter(data, Año==max(Año))
+        aux <- aux[order(aux$Duracion_proyecto, decreasing = F), ]
+        aux$Duracion_proyecto1 <- NA
+        aux$Duracion_proyecto1[1] <- aux$Duracion_proyecto[1]
+        for (i in (2:nrow(aux))) {
+            aux$Duracion_proyecto1[i] <- aux$Duracion_proyecto[i] - aux$Duracion_proyecto[i-1]
+        }
+        aux$Nombre_proyecto <- paste0(aux$Nombre_proyecto, ": ", aux$Duracion_proyecto)
+        aux$Nombre_proyecto <- factor(aux$Nombre_proyecto, levels=rev(aux$Nombre_proyecto))
+        p <- ggplot(aux, aes(x = as.numeric(Año), y = Duracion_proyecto1))+
+            geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
+            geom_hline(yintercept = mean(aux$Duracion_proyecto)) + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Duración proyectos (Semanas)") + 
+            theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
+            geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
+            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
+            scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
+            scale_y_continuous(limits = c(0, sum(aux$Duracion_proyecto1)))+
+            theme_solarized()
+        p
+    })
+    
+    
     
     output$grafico3 <- renderWordcloud2({
         ##HFALTA HACER UN UNIQUE DE LAS MISIONES ANTES DE CREAR LA VARIABLE WORD_FREQ
@@ -552,6 +685,11 @@ server <- function(input, output) {
                        size = 0.108, hjust = 2,
                        inherit.aes = FALSE)
     }) 
+    
+    
+    
+    
+    
     
     output$mytable <- renderDataTable({
         datatable(unique(data[,c("Nombre_organizacion","Mision_organizacion")]), 
@@ -658,13 +796,7 @@ server <- function(input, output) {
     
     
     
-    output$texto1 <- renderText({
-        x <- paste("Promedios:", input$projects)
-        x
-    })
-    output$texto2 <- renderText({
-        "Promedio todas las organizaciones"
-    })
+
     output$texto3 <- renderText({
         "Estadísticas promedio de todas las organizaciones"
     })

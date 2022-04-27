@@ -13,14 +13,16 @@ ui <- dashboardPage(
                     fluidRow(column(width = 12,  textOutput("texto3"), br()),
                              tags$style(type="text/css", "#texto3 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}")),
                     fluidRow(
-                        infoBoxOutput("oneBox"),
-                        infoBoxOutput("progressBox"),
-                        infoBoxOutput("approvalBox")
-                    ),
-                    fluidRow(
-                        column(width = 2),
-                        infoBoxOutput("oneBox2"),
-                        infoBoxOutput("progressBox2")
+                        box(width = 12,
+                            title = "Indicadores", collapsible = T, collapsed = F, status = "primary", solidHeader = TRUE,
+                            plotOutput('grafico1', width = "100%", height = "200px"), 
+                            plotOutput('grafico2', width = "100%", height = "200px"),
+                            plotOutput('grafico2_1', width = "100%", height = "200px"),
+                            br(),
+                            plotOutput('grafico2_2', width = "100%", height = "200px"),
+                            plotOutput('grafico2_3', width = "100%", height = "200px"),
+                            
+                        )
                     ),
                     
                     fluidRow(column(width = 12, br(),br(),  textOutput("texto7"), br()),
@@ -48,9 +50,7 @@ ui <- dashboardPage(
                              
                              column(width =  12, 
                                     box(width = 12,
-                                        title = "Gráfica Indicadores", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                        plotOutput('grafico1', width = "100%", height = "200px"), 
-                                        plotOutput('grafico2', width = "100%", height = "200px"),
+                                        title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                         plotOutput('grafico4', width = "100%", height = "400px"), 
                                         
                                     )
@@ -58,7 +58,7 @@ ui <- dashboardPage(
                              
                              column(width =  12, 
                                     box(width = 12,
-                                        title = "Gráfica Tematicas", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        title = "ODS y tematicas", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                         plotOutput('grafico8', width = "100%", height = "600px"), 
                                         #img(src='imagenOds.png', align = "right")
                                     )
@@ -66,7 +66,7 @@ ui <- dashboardPage(
                              
                              column(width =  12, 
                                     box(width = 12,
-                                        title = "Nube de palabras", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        title = "Misión de organizaciones", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                         wordcloud2Output('grafico3', width = "100%", height = "500px")
                                         
                                     )
@@ -80,34 +80,26 @@ ui <- dashboardPage(
             ),
             tabItem(tabName = "organizaciones",
                     fluidRow(column(width = 12,  textOutput("texto5")),
-                             tags$style(type="text/css", "#texto5 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}")),
-                    selectInput("projects", "Organización:",
-                                unique(as.character(data$Nombre_organizacion))),
-                    fluidRow(column(width = 6,  textOutput("texto1")),
-                             tags$style(type="text/css", "#texto1 { height: 50px; width: 100%; text-align:center; font-size: 25px; display: block;}"),
-                             column(width = 6, textOutput("texto2")),
-                             tags$style(type="text/css", "#texto2 { height: 50px; width: 100%; text-align:center; font-size: 25px; display: block;}")),
+                             tags$style(type="text/css", "#texto5 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
+                            ),
                     fluidRow(
-                        infoBoxOutput("oneBox3", width = 6),
-                        infoBoxOutput("oneBox5", width = 6),
+                        box(width = 12,
+                            title = "Indicadores", collapsible = T, collapsed = F, status = "primary", solidHeader = TRUE,
+                            plotOutput('grafico2_4', width = "100%", height = "220px"), 
+                            plotOutput('grafico2_5', width = "100%", height = "220px"),
+                            plotOutput('grafico2_6', width = "100%", height = "220px"),
+                            br(),
+                            plotOutput('grafico2_7', width = "100%", height = "220px"),
+                            plotOutput('grafico2_8', width = "100%", height = "220px"),
+                            
+                        )
                         
-                        infoBoxOutput("progressBox3", width = 6),
-                        infoBoxOutput("progressBox5", width = 6),
-                        
-                        infoBoxOutput("approvalBox3", width = 6),
-                        infoBoxOutput("approvalBox5", width = 6),
-                        
-                        infoBoxOutput("oneBox4", width = 6),
-                        infoBoxOutput("oneBox6", width = 6),
-                        
-                        infoBoxOutput("progressBox4", width = 6),
-                        infoBoxOutput("progressBox6", width = 6),
-                        
-                        infoBoxOutput("approvalBox4", width = 6)
                     ),
                     
                     fluidRow(column(width = 12, br(),br(),  textOutput("texto8"), br()),
-                             tags$style(type="text/css", "#texto8 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}")),
+                             tags$style(type="text/css", "#texto8 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
+                             selectInput("projects", "Organización:",
+                                         unique(as.character(data$Nombre_organizacion)))),
                     fluidRow(
                         infoBoxOutput("metrica9", width = 4),
                         infoBoxOutput("metrica10", width = 4),
@@ -126,7 +118,7 @@ ui <- dashboardPage(
                     fluidRow(
                         column(width =  12, 
                                box(width = 12,
-                                   title = "Gráfica Costos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico5', width = "100%", height = "400px"), 
                                )
                         ),
@@ -201,7 +193,7 @@ ui <- dashboardPage(
                     fluidRow(
                         column(width =  12, 
                                box(width = 12,
-                                   title = "Gráfica Costos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico6', width = "100%", height = "400px"), 
                                )
                         ),

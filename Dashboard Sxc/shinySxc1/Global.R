@@ -8,6 +8,7 @@ library(ggplot2)
 library(wordcloud2)
 library(readxl)
 library(ggimage)
+library(ggthemes)
  
 
 

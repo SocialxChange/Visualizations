@@ -4,7 +4,10 @@ ui <- dashboardPage(
         sidebarMenu(
             menuItem("Datos generales", tabName = "general", icon = icon("fas fa-paste")),
             menuItem("Organizaciones", tabName = "organizaciones", icon = icon("fa-solid fa-building")),
-            menuItem("Proyectos", tabName = "proyectos", icon = icon("fas fa-tasks"))
+            menuItem("Proyectos", tabName = "proyectos", icon = icon("fas fa-tasks")),
+            selectInput("periodo", "Año:",
+                        rev(unique(as.character(data$Año))),
+                        selected = max(data$Año))
         )
     ),
     dashboardBody(
@@ -99,7 +102,7 @@ ui <- dashboardPage(
                     fluidRow(column(width = 12, br(),br(),  textOutput("texto8"), br()),
                              tags$style(type="text/css", "#texto8 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
                              selectInput("projects", "Organización:",
-                                         unique(as.character(data$Nombre_organizacion)))),
+                                         c("Todos",unique(as.character(data$Nombre_organizacion))))),
                     fluidRow(
                         infoBoxOutput("metrica9", width = 4),
                         infoBoxOutput("metrica10", width = 4),

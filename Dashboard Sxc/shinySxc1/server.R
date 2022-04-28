@@ -3,46 +3,49 @@ server <- function(input, output) {
     histdata <- rnorm(500)
     
     
-
+    data0 <- reactive({
+        data0 <- filter(data, Año == input$periodo)
+    })
+    
     
     output$oneBox7 <- renderInfoBox({
         infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo[data$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-users"),
+            "Población objetivo", paste0(round(mean(data0()$Poblacion_objetivo[data0()$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-users"),
             color = "aqua", fill = TRUE
         )
     })
     output$progressBox7 <- renderInfoBox({
         infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios[data$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-user-check"),
+            "N° beneficiarios", paste0(round(mean(data0()$Beneficiarios[data0()$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
     output$approvalBox7 <- renderInfoBox({
         infoBox(
-            "Duración proyecto", paste0(round(mean(data$Duracion_proyecto[data$Nombre_proyecto==input$projects1]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyecto", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_proyecto==input$projects1]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
     
     output$oneBox8 <- renderInfoBox({
         infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales[data$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-address-card"),
+            "RRHH utilizado", paste0(round(mean(data0()$RRHH_totales[data0()$Nombre_proyecto==input$projects1]), 1), " Personas"), icon = icon("fas fa-address-card"),
             color = "blue", fill = TRUE
         )
     })
     output$progressBox8 <- renderInfoBox({
         colorx <- "green"
-        if (mean(data$Costos_totales[data$Nombre_proyecto==input$projects1]) > as.integer(quantile(data$Costos_totales, prob=c(0.6)))){
+        if (mean(data0()$Costos_totales[data0()$Nombre_proyecto==input$projects1]) > as.integer(quantile(data0()$Costos_totales, prob=c(0.6)))){
             colorx <- "red"
         }
         infoBox(
-            "Costos", paste0("M$ " ,round(mean(data$Costos_totales[data$Nombre_proyecto==input$projects1]), 1)), icon = icon("far fa-dollar-sign"),
+            "Costos", paste0("M$ " ,round(mean(data0()$Costos_totales[data0()$Nombre_proyecto==input$projects1]), 1)), icon = icon("far fa-dollar-sign"),
             color = colorx, fill = TRUE
         )
     })
     output$approvalBox8 <- renderInfoBox({
         infoBox(
-            "Lugar geográfico", paste( unlist(unique(data$Lugar_geografico[data$Nombre_proyecto==input$projects1])), collapse= ', ') , icon = icon("fas fa-map-marker-alt"),
+            "Lugar geográfico", paste( unlist(unique(data0()$Lugar_geografico[data0()$Nombre_proyecto==input$projects1])), collapse= ', ') , icon = icon("fas fa-map-marker-alt"),
             color = "teal", fill = TRUE
         )
     })
@@ -50,32 +53,32 @@ server <- function(input, output) {
     
     output$oneBox9 <- renderInfoBox({
         infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo), 1), " Personas"), icon = icon("fas fa-users"),
+            "Población objetivo", paste0(round(mean(data0()$Poblacion_objetivo), 1), " Personas"), icon = icon("fas fa-users"),
             color = "aqua", fill = TRUE
         )
     })
     output$progressBox9 <- renderInfoBox({
         infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios), 1), " Personas"), icon = icon("fas fa-user-check"),
+            "N° beneficiarios", paste0(round(mean(data0()$Beneficiarios), 1), " Personas"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
     output$approvalBox9 <- renderInfoBox({
         infoBox(
-            "Duración proyectos", paste0(round(mean(data$Duracion_proyecto), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto), 1), " Semanas"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
     
     output$oneBox10 <- renderInfoBox({
         infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales), 1), " Personas"), icon = icon("fas fa-address-card"),
+            "RRHH utilizado", paste0(round(mean(data0()$RRHH_totales), 1), " Personas"), icon = icon("fas fa-address-card"),
             color = "blue", fill = TRUE
         )
     })
     output$progressBox10 <- renderInfoBox({
         infoBox(
-            "Costos", paste0("M$ " ,round(mean(data$Costos_totales), 1)), icon = icon("far fa-dollar-sign"),
+            "Costos", paste0("M$ " ,round(mean(data0()$Costos_totales), 1)), icon = icon("far fa-dollar-sign"),
             color = "green", fill = TRUE
         )
     })
@@ -85,42 +88,42 @@ server <- function(input, output) {
     
     output$oneBox11 <- renderInfoBox({
         infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-users"),
+            "Población objetivo", paste0(round(mean(data0()$Poblacion_objetivo[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-users"),
             color = "aqua", fill = TRUE
         )
     })
     output$progressBox11 <- renderInfoBox({
         infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-user-check"),
+            "N° beneficiarios", paste0(round(mean(data0()$Beneficiarios[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
     output$approvalBox11 <- renderInfoBox({
         infoBox(
-            "Duración proyectos", paste0(round(mean(data$Duracion_proyecto[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
     
     output$oneBox12 <- renderInfoBox({
         infoBox(
-            "RRHH utilizado", paste0(round(mean(data$RRHH_totales[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-address-card"),
+            "RRHH utilizado", paste0(round(mean(data0()$RRHH_totales[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Personas"), icon = icon("fas fa-address-card"),
             color = "blue", fill = TRUE
         )
     })
     output$progressBox12 <- renderInfoBox({
         colorx <- "green"
-        if (mean(data$Costos_totales[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]) > as.integer(quantile(data$Costos_totales, prob=c(0.6)))){
+        if (mean(data0()$Costos_totales[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]) > as.integer(quantile(data0()$Costos_totales, prob=c(0.6)))){
             colorx <- "red"
         }
         infoBox(
-            "Costos", paste0("M$ " ,round(mean(data$Costos_totales[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1)), icon = icon("far fa-dollar-sign"),
+            "Costos", paste0("M$ " ,round(mean(data0()$Costos_totales[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1)), icon = icon("far fa-dollar-sign"),
             color = colorx, fill = TRUE
         )
     })
     output$approvalBox12 <- renderInfoBox({
         infoBox(
-            "Lugar geográfico", paste( unlist(unique(data$Lugar_geografico[data$Nombre_organizacion==as.character(unique(select(filter(data, Nombre_proyecto==input$projects1), "Nombre_organizacion")))])), collapse= ', ') , icon = icon("fas fa-map-marker-alt"),
+            "Lugar geográfico", paste( unlist(unique(data0()$Lugar_geografico[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))])), collapse= ', ') , icon = icon("fas fa-map-marker-alt"),
             color = "teal", fill = TRUE
         )
     })
@@ -131,39 +134,22 @@ server <- function(input, output) {
     
     
     
-    output$oneBox <- renderInfoBox({
-        infoBox(
-            "Población objetivo", paste0(round(mean(data$Poblacion_objetivo), 1), " Personas"), icon = icon("fas fa-users"),
-            color = "aqua", fill = TRUE
-        )
-    })
-    output$progressBox <- renderInfoBox({
-        infoBox(
-            "N° beneficiarios", paste0(round(mean(data$Beneficiarios), 1), " Personas"), icon = icon("fas fa-user-check"),
-            color = "purple", fill = TRUE
-        )
-    })
-    
-    
-    
-    
-    
     
     output$metrica1 <- renderInfoBox({
         infoBox(
-            "Beneficiarios por población", round( (sum(data$Beneficiarios)/sum(data$Poblacion_objetivo)), 1), icon = icon("fas fa-user-check"),
+            "Beneficiarios por población", paste0((round( (sum(data0()$Beneficiarios)/sum(data0()$Poblacion_objetivo)), 3))*100, "%"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
     output$metrica2 <- renderInfoBox({
         infoBox(
-            "Beneficiarios por RRHH", round( (sum(data$Beneficiarios)/sum(data$RRHH_totales)), 1), icon = icon("fas fa-user-check"),
+            "Beneficiarios por RRHH", round( (sum(data0()$Beneficiarios)/sum(data0()$RRHH_totales)), 1), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
     output$metrica3 <- renderInfoBox({
         infoBox(
-            "Beneficiarios por proyecto", round( (sum(data$Beneficiarios)/length(unique(data$Nombre_proyecto))), 1), icon = icon("fas fa-user-check"),
+            "Beneficiarios por proyecto", round( (sum(data0()$Beneficiarios)/length(unique(data0()$Nombre_proyecto))), 1), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
@@ -172,19 +158,19 @@ server <- function(input, output) {
     
     output$metrica4 <- renderInfoBox({
         infoBox(
-            "Presupuesto por proyecto", round( (sum(data$Costos_totales)/length(unique(data$Nombre_proyecto))), 1), icon = icon("far fa-dollar-sign"),
+            "Presupuesto por proyecto", round( (sum(data0()$Costos_totales)/length(unique(data0()$Nombre_proyecto))), 1), icon = icon("far fa-dollar-sign"),
             color = "green", fill = TRUE
         )
     })
     output$metrica5 <- renderInfoBox({
         infoBox(
-            "Presupuesto por beneficiario", round( (sum(data$Costos_totales)/sum(data$Beneficiarios)), 1), icon = icon("far fa-dollar-sign"),
+            "Presupuesto por beneficiario", round( (sum(data0()$Costos_totales)/sum(data0()$Beneficiarios)), 1), icon = icon("far fa-dollar-sign"),
             color = "green", fill = TRUE
         )
     })
     output$metrica6 <- renderInfoBox({
         infoBox(
-            "Presupuesto por población", round( (sum(data$Costos_totales)/sum(data$Poblacion_objetivo)), 1), icon = icon("far fa-dollar-sign"),
+            "Presupuesto por población", round( (sum(data0()$Costos_totales)/sum(data0()$Poblacion_objetivo)), 1), icon = icon("far fa-dollar-sign"),
             color = "green", fill = TRUE
         )
     })
@@ -192,13 +178,13 @@ server <- function(input, output) {
     
     output$metrica7 <- renderInfoBox({
         infoBox(
-            "Presupuesto por RRHH", round( (sum(data$Costos_totales)/sum(data$RRHH_totales)), 1), icon = icon("far fa-dollar-sign"),
+            "Presupuesto por RRHH", round( (sum(data0()$Costos_totales)/sum(data0()$RRHH_totales)), 1), icon = icon("far fa-dollar-sign"),
             color = "blue", fill = TRUE
         )
     })
     output$metrica8 <- renderInfoBox({
         infoBox(
-            "Población por RRHH", round( (sum(data$Poblacion_objetivo)/sum(data$RRHH_totales)), 1), icon = icon("fas fa-users"),
+            "Población por RRHH", round( (sum(data0()$Poblacion_objetivo)/sum(data0()$RRHH_totales)), 1), icon = icon("fas fa-users"),
             color = "blue", fill = TRUE
         )
     })
@@ -206,12 +192,12 @@ server <- function(input, output) {
     
     
     data1 <- reactive({
-        data1 <- filter(data, Nombre_organizacion == input$projects)
+        data1 <- filter(data, Nombre_organizacion == input$projects & Año == input$periodo)
     })
     
     output$metrica9 <- renderInfoBox({
         infoBox(
-            "Beneficiarios por población", round( (sum(data1()$Beneficiarios)/sum(data1()$Poblacion_objetivo)), 2), icon = icon("fas fa-user-check"),
+            "Beneficiarios por población", paste0((round( (sum(data1()$Beneficiarios)/sum(data1()$Poblacion_objetivo)), 3))*100, "%"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
@@ -265,12 +251,12 @@ server <- function(input, output) {
     
     
     data2 <- reactive({
-        data2 <- filter(data, Nombre_proyecto == input$projects1)
+        data2 <- filter(data, Nombre_proyecto == input$projects1 & Año == input$periodo)
     })
     
     output$metrica17 <- renderInfoBox({
         infoBox(
-            "Beneficiarios por población", round( (sum(data2()$Beneficiarios)/sum(data2()$Poblacion_objetivo)), 1), icon = icon("fas fa-user-check"),
+            "Beneficiarios por población", paste0((round( (sum(data2()$Beneficiarios)/sum(data2()$Poblacion_objetivo)), 3))*100, "%"), icon = icon("fas fa-user-check"),
             color = "purple", fill = TRUE
         )
     })
@@ -323,13 +309,8 @@ server <- function(input, output) {
     
     
     
-    
-    
-    
-    
-    
     output$grafico1 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux %>% 
                 group_by(Nombre_organizacion, Año) %>% 
                 summarise(Poblacion_objetivo = sum(Poblacion_objetivo))
@@ -355,7 +336,7 @@ server <- function(input, output) {
     })
     
     output$grafico2 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux %>% 
             group_by(Nombre_organizacion, Año) %>% 
             summarise(Beneficiarios = sum(Beneficiarios),
@@ -388,7 +369,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_1 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux %>% 
             group_by(Nombre_organizacion, Año) %>% 
             summarise(RRHH_totales = sum(RRHH_totales),
@@ -421,7 +402,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_2 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux %>% 
             group_by(Nombre_organizacion, Año) %>% 
             summarise(Costos_totales = sum(Costos_totales))
@@ -447,7 +428,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_3 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux %>% 
             group_by(Nombre_organizacion, Año) %>% 
             summarise(Duracion_proyecto = sum(Duracion_proyecto))
@@ -476,7 +457,7 @@ server <- function(input, output) {
     
     
     output$grafico2_4 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -499,7 +480,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_5 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -528,7 +509,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_6 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -557,7 +538,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_7 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux[order(aux$Costos_totales, decreasing = F), ]
         aux$Costos_totales1 <- NA
         aux$Costos_totales1[1] <- aux$Costos_totales[1]
@@ -580,7 +561,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_8 <- renderPlot({
-        aux <- filter(data, Año==max(Año))
+        aux <- filter(data, Año==input$periodo)
         aux <- aux[order(aux$Duracion_proyecto, decreasing = F), ]
         aux$Duracion_proyecto1 <- NA
         aux$Duracion_proyecto1[1] <- aux$Duracion_proyecto[1]
@@ -606,7 +587,7 @@ server <- function(input, output) {
     
     output$grafico3 <- renderWordcloud2({
         ##HFALTA HACER UN UNIQUE DE LAS MISIONES ANTES DE CREAR LA VARIABLE WORD_FREQ
-        word_freq <- data %>%
+        word_freq <- data0() %>%
             unnest_tokens(output = word,
                           input = Mision_organizacion,
                           token = "words",
@@ -670,12 +651,7 @@ server <- function(input, output) {
 #    })
 
     output$grafico8 <- renderPlot({ 
-        df2 <- data
-        df2$Image <- rep(c('http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-01.jpg',
-                           'http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-03.jpg',
-                           "http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-05.jpg",
-                           "https://mujeres360.org/wp-content/uploads/2021/06/ODS-9-1024x1024.jpg",
-                           "http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-04.jpg"),6)
+        df2 <- data0()
         df2$ODS <- factor(df2$ODS, levels=c("Industria, innovación e infraestructura", "Igualdad de género","Educación de calidad", "Salud y bienestar", "Fin de la pobreza" ))
         m <- ggplot(df2, aes(x = ODS, y = Poblacion_objetivo, fill=Nombre_organizacion)) +
             geom_bar(stat = "identity") + coord_flip()+
@@ -692,7 +668,7 @@ server <- function(input, output) {
     
     
     output$mytable <- renderDataTable({
-        datatable(unique(data[,c("Nombre_organizacion","Mision_organizacion")]), 
+        datatable(unique(data0()[,c("Nombre_organizacion","Mision_organizacion")]), 
                   extensions = c("FixedColumns", "FixedHeader", "Scroller"), 
                   options = list(
                       # dom = 't',
@@ -717,7 +693,7 @@ server <- function(input, output) {
     
     output$mytable1 <- renderDataTable({
         
-        datatable(select(filter(data, Nombre_organizacion == input$projects), -c("Nombre_organizacion","Mision_organizacion")), 
+        datatable(select(filter(data0(), Nombre_organizacion == input$projects), -c("Nombre_organizacion","Mision_organizacion")), 
                   extensions = c("FixedColumns", "FixedHeader", "Scroller"), 
                   options = list(
                       # dom = 't',
@@ -743,7 +719,7 @@ server <- function(input, output) {
     
     output$mytable2 <- renderDataTable({
         
-        datatable(select(data, -c("Nombre_organizacion","Mision_organizacion")), 
+        datatable(select(data0(), -c("Nombre_organizacion","Mision_organizacion")), 
                   extensions = c("FixedColumns", "FixedHeader", "Scroller"), 
                   options = list(
                       # dom = 't',

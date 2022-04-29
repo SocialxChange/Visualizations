@@ -73,7 +73,23 @@ ui <- dashboardPage(
                                         wordcloud2Output('grafico3', width = "100%", height = "500px")
                                         
                                     )
+                             ),      
+                             
+                             column(width =  12, 
+                                    box(width = 12,
+                                        title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        plotOutput('grafico10', width = "100%", height = "400px")
+                                        
+                                    )
                              ),
+                             column(width =  12, 
+                                    box(width = 12,
+                                        title = "Mapa proyectos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        leafletOutput('mapa1', width = "100%", height = 400), 
+                                    )
+                             ),
+                             
+                             
                              fluidRow(column(width = 12, br(), textOutput("texto4")),
                                       tags$style(type="text/css", "#texto4 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}")),
                              column(width = 12,
@@ -127,25 +143,11 @@ ui <- dashboardPage(
                                box(width = 12,
                                    title = "ODS y tematicas", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico9', width = "100%", height = "600px"), 
-                                   #img(src='imagenOds.png', align = "right")
                                ), 
                                box(width = 12,
-                                   title = "Mapa proyectos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                   plotOutput('mapa1', width = "100%", height = "400px"), 
-                                   #img(src='imagenOds.png', align = "right")
-                               ), 
-                               
-                               
-                               
-                               
-                               
-                               column(width = 6,
-                                      tags$div("", tags$br(),""),
-                                      tags$div("", tags$br(),""),
-                                      leafletOutput("mapa", width = "100%", height = 600),
-                                      uiOutput("uiNotaReactiva"),
-                                      p(HTML('Fuente: El presente mapa reporta las principales visualizaciones generadas a partir de los datos levantados desde el formulario online asociado al Registro Nacional de Agentes Culturales, Artísticos y Patrimoniales, implementado por el Ministerio de las Culturas, las Artes y el Patrimonio con corte al 10 de Octubre.<br><A HREF="https://registro.cultura.gob.cl/"> Registro Online de Agentes Culturales. </A>'))
-                               ),
+                                   title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('grafico11', width = "100%", height = "400px"), 
+                               )
                         ),
                     ),
                     fluidRow(column(width = 12, br(),  textOutput("texto6")),
@@ -220,6 +222,10 @@ ui <- dashboardPage(
                                box(width = 12,
                                    title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico6', width = "100%", height = "400px"), 
+                               ),
+                               box(width = 12,
+                                   title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('grafico12', width = "100%", height = "400px"), 
                                )
                         ),
                     ),

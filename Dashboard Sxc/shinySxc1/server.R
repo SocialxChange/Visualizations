@@ -697,22 +697,106 @@ server <- function(input, output) {
     
     
     
+    output$grafico10 <- renderPlot({ 
+        data1 <- data0() %>%
+            group_by(Año) %>%
+            summarise(Porcentaje_avance_actividades = mean(Porcentaje_avance_actividades))
+        
+        data1$Estado <- "Completado" 
+        data2 <- data1
+        data2$Porcentaje_avance_actividades <- 100-as.double(data1$Porcentaje_avance_actividades)
+        data2$Estado <- "Pendiente"
+        data1 <- rbind(data1, data2)
+        hsize <- 1.5
+        data1$Estado <- factor(data1$Estado, levels=c( "Pendiente" ,"Completado" ))
+        data1 <- data1 %>% 
+            mutate(x = hsize)
+        ggplot(data = data1, aes(x = hsize, y = Porcentaje_avance_actividades, fill = Estado)) +
+            geom_col() +
+            coord_polar(theta = "y") +
+            xlim(c(0.2, hsize + 0.5)) + 
+            labs(x = element_blank(), y = element_blank(), title = "Porcentaje avance actividades") +
+            geom_label(aes(label=paste(Porcentaje_avance_actividades, "%")), position = position_stack(vjust = 0.5), show.legend = F) +
+            theme( axis.text = element_blank(),
+                   axis.ticks.y = element_blank(),
+                   panel.background = element_rect(fill = "white"),
+                   plot.title = element_text(size = 16, family = "serif", hjust = 0.5))
+    }) 
+    
+    
+    
+    output$grafico11 <- renderPlot({ 
+        data1 <- data1() %>%
+            group_by(Año) %>%
+            summarise(Porcentaje_avance_actividades = mean(Porcentaje_avance_actividades))
+        
+        data1$Estado <- "Completado" 
+        data2 <- data1
+        data2$Porcentaje_avance_actividades <- 100-as.double(data1$Porcentaje_avance_actividades)
+        data2$Estado <- "Pendiente"
+        data1 <- rbind(data1, data2)
+        hsize <- 1.5
+        data1$Estado <- factor(data1$Estado, levels=c( "Pendiente" ,"Completado" ))
+        data1 <- data1 %>% 
+            mutate(x = hsize)
+        ggplot(data = data1, aes(x = hsize, y = Porcentaje_avance_actividades, fill = Estado)) +
+            geom_col() +
+            coord_polar(theta = "y") +
+            xlim(c(0.2, hsize + 0.5)) + 
+            labs(x = element_blank(), y = element_blank(), title = "Porcentaje avance actividades") +
+            geom_label(aes(label=paste(Porcentaje_avance_actividades, "%")), position = position_stack(vjust = 0.5), show.legend = F) +
+            theme( axis.text = element_blank(),
+                   axis.ticks.y = element_blank(),
+                   panel.background = element_rect(fill = "white"),
+                   plot.title = element_text(size = 16, family = "serif", hjust = 0.5))
+    }) 
+    
+    
+    
+    output$grafico12 <- renderPlot({ 
+        data1 <- data2() %>%
+            group_by(Año) %>%
+            summarise(Porcentaje_avance_actividades = mean(Porcentaje_avance_actividades))
+        
+        data1$Estado <- "Completado" 
+        data2 <- data1
+        data2$Porcentaje_avance_actividades <- 100-as.double(data1$Porcentaje_avance_actividades)
+        data2$Estado <- "Pendiente"
+        data1 <- rbind(data1, data2)
+        hsize <- 1.5
+        data1$Estado <- factor(data1$Estado, levels=c( "Pendiente" ,"Completado" ))
+        data1 <- data1 %>% 
+            mutate(x = hsize)
+        ggplot(data = data1, aes(x = hsize, y = Porcentaje_avance_actividades, fill = Estado)) +
+            geom_col() +
+            coord_polar(theta = "y") +
+            xlim(c(0.2, hsize + 0.5)) + 
+            labs(x = element_blank(), y = element_blank(), title = "Porcentaje avance actividades") +
+            geom_label(aes(label=paste(Porcentaje_avance_actividades, "%")), position = position_stack(vjust = 0.5), show.legend = F) +
+            theme( axis.text = element_blank(),
+                   axis.ticks.y = element_blank(),
+                   panel.background = element_rect(fill = "white"),
+                   plot.title = element_text(size = 16, family = "serif", hjust = 0.5))
+    }) 
+    
+    
     
     user_dataTO <- reactive({
             #mapa comuna
             leaflet() %>% setView(lng=-69.64029, lat=-39.44606 , zoom=4) %>%
                 # Opcion para anadir imagenes o mapas de fondo (tiles)
                 addProviderTiles(provider = providers$CartoDB.Positron) %>%
-                addPolygons(data=map_comunas,
-                            color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
+                addPolygons(data=map_comunas1 ,
+                            #color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
+                            color = "black", 
                             weight = 0.9,
                             smoothFactor = 0.9,
                             opacity = 0.7,
-                            fillOpacity = 0.4,
-                            highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
-                            label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
-                addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
-                          title = "Número de personas naturales por comuna")
+                            fillOpacity = 0.4)
+                            #highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
+                            #label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
+                #addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
+                #         title = "Número de personas naturales por comuna")
 
     })
     

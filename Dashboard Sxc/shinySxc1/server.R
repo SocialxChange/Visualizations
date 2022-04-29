@@ -22,7 +22,7 @@ server <- function(input, output) {
     })
     output$approvalBox7 <- renderInfoBox({
         infoBox(
-            "Duración proyecto", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_proyecto==input$projects1]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyecto", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_proyecto==input$projects1]), 1), " Meses"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
@@ -65,7 +65,7 @@ server <- function(input, output) {
     })
     output$approvalBox9 <- renderInfoBox({
         infoBox(
-            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto), 1), " Meses"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
@@ -100,7 +100,7 @@ server <- function(input, output) {
     })
     output$approvalBox11 <- renderInfoBox({
         infoBox(
-            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Semanas"), icon = icon("fas fa-hourglass"),
+            "Duración proyectos", paste0(round(mean(data0()$Duracion_proyecto[data0()$Nombre_organizacion==as.character(unique(select(filter(data0(), Nombre_proyecto==input$projects1), "Nombre_organizacion")))]), 1), " Meses"), icon = icon("fas fa-hourglass"),
             color = "yellow", fill = TRUE
         )
     })
@@ -191,9 +191,17 @@ server <- function(input, output) {
     
     
     
+    
+    
     data1 <- reactive({
-        data1 <- filter(data, Nombre_organizacion == input$projects & Año == input$periodo)
+        if (input$projects=="Todos") {
+            data1 <- filter(data, Año==input$periodo)
+        } else {
+            data1 <- filter(data, Nombre_organizacion == input$projects & Año == input$periodo)
+        }
     })
+    
+    
     
     output$metrica9 <- renderInfoBox({
         infoBox(
@@ -443,7 +451,7 @@ server <- function(input, output) {
         p <- ggplot(aux, aes(x = as.numeric(Año), y = Duracion_proyecto1))+
             geom_col(aes(fill = Nombre_organizacion), width = 0.4) + coord_flip() + 
             geom_hline(yintercept = mean(aux$Duracion_proyecto)) + 
-            labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Duración proyectos (Semanas)") + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Duración proyectos (Meses)") + 
             theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
             geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
             geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
@@ -457,7 +465,7 @@ server <- function(input, output) {
     
     
     output$grafico2_4 <- renderPlot({
-        aux <- filter(data, Año==input$periodo)
+        aux <- data1()
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -477,10 +485,12 @@ server <- function(input, output) {
             scale_y_continuous(limits = c(0, sum(aux$Poblacion_objetivo1))) +
             theme_igray()
         p
+        
+        
     })
     
     output$grafico2_5 <- renderPlot({
-        aux <- filter(data, Año==input$periodo)
+        aux <- data1()
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -509,7 +519,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_6 <- renderPlot({
-        aux <- filter(data, Año==input$periodo)
+        aux <- data1()
         aux <- aux[order(aux$Poblacion_objetivo, decreasing = F), ]
         aux$Poblacion_objetivo1 <- NA
         aux$Poblacion_objetivo1[1] <- aux$Poblacion_objetivo[1]
@@ -538,7 +548,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_7 <- renderPlot({
-        aux <- filter(data, Año==input$periodo)
+        aux <- data1()
         aux <- aux[order(aux$Costos_totales, decreasing = F), ]
         aux$Costos_totales1 <- NA
         aux$Costos_totales1[1] <- aux$Costos_totales[1]
@@ -561,7 +571,7 @@ server <- function(input, output) {
     })
     
     output$grafico2_8 <- renderPlot({
-        aux <- filter(data, Año==input$periodo)
+        aux <- data1()
         aux <- aux[order(aux$Duracion_proyecto, decreasing = F), ]
         aux$Duracion_proyecto1 <- NA
         aux$Duracion_proyecto1[1] <- aux$Duracion_proyecto[1]
@@ -573,7 +583,7 @@ server <- function(input, output) {
         p <- ggplot(aux, aes(x = as.numeric(Año), y = Duracion_proyecto1))+
             geom_col(aes(fill = Nombre_proyecto), width = 0.4) + coord_flip() + 
             geom_hline(yintercept = mean(aux$Duracion_proyecto)) + 
-            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Duración proyectos (Semanas)") + 
+            labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Duración proyectos (Meses)") + 
             theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
             geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
             geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
@@ -607,10 +617,19 @@ server <- function(input, output) {
             group_by(Año) %>%
             summarise(Costos_totales = sum(Costos_totales))
         r <- ggplot(aux, aes(x = Año, y = Costos_totales)) +
-            geom_point(size = 4, colour = 4) + geom_line(size = 2)+
+            geom_point(size = 2, colour = 4) + 
+            geom_area(fill = 3,
+                      alpha = 0.5,
+                      color = 1,   
+                      lwd = 0.5,   
+                      linetype = 1) +
+            geom_label(aes(label = Costos_totales)) +
+            scale_x_continuous(breaks = unique(aux$Año))  + 
+            scale_y_continuous(limits = c(0, (max(aux$Costos_totales) * 1.2))) + 
             geom_hline(yintercept = mean(aux$Costos_totales), linetype = "dotdash", colour = "red")  +
             annotate("text", x= 2020.2, y=(mean(aux$Costos_totales)+1000), label=paste("Promedio:",round(mean(aux$Costos_totales)),1), color="red")+
-            labs(x = "Año" , y = "Costos totales")
+            labs(x = "Año" , y = "Costos totales") 
+            
         r 
     })
     
@@ -620,7 +639,8 @@ server <- function(input, output) {
             group_by(Año, Nombre_organizacion) %>%
             summarise(Costos_totales = sum(Costos_totales))
         r <- ggplot(aux, aes(x = Año, y = Costos_totales, color = Nombre_organizacion)) +
-            geom_point(size = 4, colour = 4) + geom_line(size = 2)+
+            geom_point(size = 4, colour = 4) + 
+            geom_line(size = 2)+
             geom_hline(yintercept = mean(aux$Costos_totales), linetype = "dotdash", colour = "red")  +
             annotate("text", x= 2020.2, y=(mean(aux$Costos_totales)+1000), label=paste("Promedio:",round(mean(aux$Costos_totales)),1), color="red")+
             labs(x = "Año" , y = "Costos totales" , color = "Nombre organización")
@@ -633,7 +653,8 @@ server <- function(input, output) {
             group_by(Año, Nombre_proyecto) %>%
             summarise(Costos_totales = sum(Costos_totales))
         r <- ggplot(aux, aes(x = Año, y = Costos_totales, color = Nombre_proyecto)) +
-            geom_point(size = 4, colour = 4) + geom_line(size = 2)+
+            geom_point(size = 4, colour = 4) + 
+            geom_line(size = 2)+
             geom_hline(yintercept = mean(aux$Costos_totales), linetype = "dotdash", colour = "red")  +
             annotate("text", x= 2020.2, y=(mean(aux$Costos_totales)+1000), label=paste("Promedio:",round(mean(aux$Costos_totales)),1), color="red")+
             labs(x = "Año" , y = "Costos totales" , color = "Nombre organización")
@@ -653,14 +674,70 @@ server <- function(input, output) {
     output$grafico8 <- renderPlot({ 
         df2 <- data0()
         df2$ODS <- factor(df2$ODS, levels=c("Industria, innovación e infraestructura", "Igualdad de género","Educación de calidad", "Salud y bienestar", "Fin de la pobreza" ))
-        m <- ggplot(df2, aes(x = ODS, y = Poblacion_objetivo, fill=Nombre_organizacion)) +
+        m <- ggplot(df2, aes(x = ODS, y = Beneficiarios, fill=Nombre_organizacion)) +
             geom_bar(stat = "identity") + coord_flip()+
             theme(axis.text.y = element_blank())+
-            labs(x = "ODS" , y = "Población objetivo" , fill = "Nombre organización")
+            labs(x = "ODS" , y = "Beneficiarios" , fill = "Nombre organización")
         m + geom_image(aes(x = ODS, image = Image), y = 0,  # add geom_image layer
                        size = 0.108, hjust = 2,
                        inherit.aes = FALSE)
     }) 
+    
+    output$grafico9 <- renderPlot({ 
+        df2 <- data1()
+        df2$ODS <- factor(df2$ODS, levels=c("Industria, innovación e infraestructura", "Igualdad de género","Educación de calidad", "Salud y bienestar", "Fin de la pobreza" ))
+        m <- ggplot(df2, aes(x = ODS, y = Beneficiarios, fill=Nombre_organizacion)) +
+            geom_bar(stat = "identity") + coord_flip()+
+            theme(axis.text.y = element_blank())+
+            labs(x = "ODS" , y = "Beneficiarios" , fill = "Nombre organización")
+        m + geom_image(aes(x = ODS, image = Image), y = 0,  # add geom_image layer
+                       size = 0.108, hjust = 2,
+                       inherit.aes = FALSE)
+    }) 
+    
+    
+    
+    
+    user_dataTO <- reactive({
+            #mapa comuna
+            leaflet() %>% setView(lng=-69.64029, lat=-39.44606 , zoom=4) %>%
+                # Opcion para anadir imagenes o mapas de fondo (tiles)
+                addProviderTiles(provider = providers$CartoDB.Positron) %>%
+                addPolygons(data=map_comunas,
+                            color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
+                            weight = 0.9,
+                            smoothFactor = 0.9,
+                            opacity = 0.7,
+                            fillOpacity = 0.4,
+                            highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
+                            label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
+                addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
+                          title = "Número de personas naturales por comuna")
+
+    })
+    
+    
+    output$mapa1 <- renderLeaflet({
+        user_dataTO()
+    })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -693,7 +770,7 @@ server <- function(input, output) {
     
     output$mytable1 <- renderDataTable({
         
-        datatable(select(filter(data0(), Nombre_organizacion == input$projects), -c("Nombre_organizacion","Mision_organizacion")), 
+        datatable(select(data1(), -c("Nombre_organizacion","Mision_organizacion")), 
                   extensions = c("FixedColumns", "FixedHeader", "Scroller"), 
                   options = list(
                       # dom = 't',

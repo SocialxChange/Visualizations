@@ -84,7 +84,8 @@ ui <- dashboardPage(
             tabItem(tabName = "organizaciones",
                     fluidRow(column(width = 12,  textOutput("texto5")),
                              tags$style(type="text/css", "#texto5 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
-                            ),
+                             selectInput("projects", "Organización:",
+                                         c("Todos",unique(as.character(data$Nombre_organizacion))))),
                     fluidRow(
                         box(width = 12,
                             title = "Indicadores", collapsible = T, collapsed = F, status = "primary", solidHeader = TRUE,
@@ -100,9 +101,8 @@ ui <- dashboardPage(
                     ),
                     
                     fluidRow(column(width = 12, br(),br(),  textOutput("texto8"), br()),
-                             tags$style(type="text/css", "#texto8 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
-                             selectInput("projects", "Organización:",
-                                         c("Todos",unique(as.character(data$Nombre_organizacion))))),
+                             tags$style(type="text/css", "#texto8 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}")
+                             ),
                     fluidRow(
                         infoBoxOutput("metrica9", width = 4),
                         infoBoxOutput("metrica10", width = 4),
@@ -123,7 +123,29 @@ ui <- dashboardPage(
                                box(width = 12,
                                    title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico5', width = "100%", height = "400px"), 
-                               )
+                               ),
+                               box(width = 12,
+                                   title = "ODS y tematicas", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('grafico9', width = "100%", height = "600px"), 
+                                   #img(src='imagenOds.png', align = "right")
+                               ), 
+                               box(width = 12,
+                                   title = "Mapa proyectos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('mapa1', width = "100%", height = "400px"), 
+                                   #img(src='imagenOds.png', align = "right")
+                               ), 
+                               
+                               
+                               
+                               
+                               
+                               column(width = 6,
+                                      tags$div("", tags$br(),""),
+                                      tags$div("", tags$br(),""),
+                                      leafletOutput("mapa", width = "100%", height = 600),
+                                      uiOutput("uiNotaReactiva"),
+                                      p(HTML('Fuente: El presente mapa reporta las principales visualizaciones generadas a partir de los datos levantados desde el formulario online asociado al Registro Nacional de Agentes Culturales, Artísticos y Patrimoniales, implementado por el Ministerio de las Culturas, las Artes y el Patrimonio con corte al 10 de Octubre.<br><A HREF="https://registro.cultura.gob.cl/"> Registro Online de Agentes Culturales. </A>'))
+                               ),
                         ),
                     ),
                     fluidRow(column(width = 12, br(),  textOutput("texto6")),

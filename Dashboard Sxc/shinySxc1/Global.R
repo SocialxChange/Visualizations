@@ -12,7 +12,6 @@ library(ggthemes)
 library(leaflet)
 library(sf)
  
-
 load("coordenadasComunas.RData")
 data <- read_excel("data.xlsx")
 data$Lugar_geografico <- chartr("ÁÉÍÓÚ", "AEIOU", toupper(data$Lugar_geografico))
@@ -28,4 +27,5 @@ data$Image <- rep(c('http://www.un.org/sustainabledevelopment/es/wp-content/uplo
                    "http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-05.jpg",
                    "https://mujeres360.org/wp-content/uploads/2021/06/ODS-9-1024x1024.jpg",
                    "http://www.un.org/sustainabledevelopment/es/wp-content/uploads/sites/3/2016/01/S_SDG_Icons-01-04.jpg"),6)
+load("dfMapaDominio5.RData")
 

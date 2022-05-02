@@ -782,21 +782,31 @@ server <- function(input, output) {
     
     
     user_dataTO <- reactive({
-            #mapa comuna
-            leaflet() %>% setView(lng=-69.64029, lat=-39.44606 , zoom=4) %>%
-                # Opcion para anadir imagenes o mapas de fondo (tiles)
-                addProviderTiles(provider = providers$CartoDB.Positron) %>%
-                addPolygons(data=map_comunas1 ,
-                            #color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
-                            color = "black", 
-                            weight = 0.9,
-                            smoothFactor = 0.9,
-                            opacity = 0.7,
-                            fillOpacity = 0.4)
-                            #highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
-                            #label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
-                #addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
-                #         title = "Número de personas naturales por comuna")
+        leaflet() %>% setView(lng=-69.64029, lat=-39.44606 , zoom=4) %>%
+            # Opcion para anadir imagenes o mapas de fondo (tiles)
+            addProviderTiles(provider = providers$CartoDB.Positron) %>%
+            # Funcion para agregar poligonos
+            addPolygons(data=map_regiones1,
+                        color="black",
+                        weight = 1,
+                        smoothFactor = 0.5,
+                        opacity = 1,
+                        fillOpacity = 0)%>%
+            # Funcion para agregar poligonos
+            addPolygons(data=map_comunas1,
+                        color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
+                        weight = 0.9,
+                        smoothFactor = 0.9,
+                        opacity = 0.7,
+                        fillOpacity = 0.4,
+                        highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
+                        label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
+            addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
+                      title = "Número de beneficiarios por comuna")
+        
+        
+        
+
 
     })
     
@@ -804,16 +814,6 @@ server <- function(input, output) {
     output$mapa1 <- renderLeaflet({
         user_dataTO()
     })
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

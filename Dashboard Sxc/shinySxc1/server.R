@@ -454,7 +454,6 @@ server <- function(input, output) {
             labs(x = "Año" , y = element_blank() , fill = "Nombre organización" , title = "Duración proyectos (Meses)") + 
             theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
             geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
-            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
             scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
             scale_y_continuous(limits = c(0, sum(aux$Duracion_proyecto1)))+
             theme_solarized()
@@ -586,7 +585,6 @@ server <- function(input, output) {
             labs(x = "Año" , y = element_blank() , fill = "Nombre proyecto" , title = "Duración proyectos (Meses)") + 
             theme(plot.title = element_text(size = 16, family = "serif", hjust = 0.5)) + 
             geom_label(x=(max(aux$Año) + 0.3), y=mean(aux$Duracion_proyecto), label=paste("Promedio:",round(mean(aux$Duracion_proyecto),2)), colour = "black", fill = "grey") + 
-            geom_label(x=(max(aux$Año) - 0.3), y=(sum(aux$Duracion_proyecto1)*0.98), label=paste("Suma total:",sum(aux$Duracion_proyecto)), colour = "navy", fill = "lightblue") + 
             scale_x_continuous(limits = c((max(aux$Año) - 0.4), (max(aux$Año) + 0.4)) ,breaks = unique(aux$Año)) + 
             scale_y_continuous(limits = c(0, sum(aux$Duracion_proyecto1)))+
             theme_solarized()
@@ -782,32 +780,7 @@ server <- function(input, output) {
     
     
     user_dataTO <- reactive({
-        leaflet() %>% setView(lng=-69.64029, lat=-39.44606 , zoom=4) %>%
-            # Opcion para anadir imagenes o mapas de fondo (tiles)
-            addProviderTiles(provider = providers$CartoDB.Positron) %>%
-            # Funcion para agregar poligonos
-            addPolygons(data=map_regiones1,
-                        color="black",
-                        weight = 1,
-                        smoothFactor = 0.5,
-                        opacity = 1,
-                        fillOpacity = 0)%>%
-            # Funcion para agregar poligonos
-            addPolygons(data=map_comunas1,
-                        color = ~pal_num_comunas_pn(map_comunas1$N_comunas_pn), 
-                        weight = 0.9,
-                        smoothFactor = 0.9,
-                        opacity = 0.7,
-                        fillOpacity = 0.4,
-                        highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
-                        label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
-            addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas1$N_comunas_pn, 
-                      title = "Número de beneficiarios por comuna")
-        
-        
-        
-
-
+        mapa
     })
     
     
@@ -959,6 +932,23 @@ server <- function(input, output) {
         x <- paste("Métricas:", input$projects1)
         x
     })
+    output$texto10 <- renderText({
+        x <- paste("Indicadores organización:", input$projects)
+        x
+    })
+    output$texto11 <- renderText({
+        x <- paste("ODS y temáticas organización:", input$projects)
+        x
+    })
+    output$texto12 <- renderText({
+        x <- paste("Porcentaje de avance de organización:", input$projects)
+        x
+    })
+    output$texto13 <- renderText({
+        x <- paste("Porcentaje de avance de proyecto:", input$projects1)
+        x
+    })
+    
     
     
     

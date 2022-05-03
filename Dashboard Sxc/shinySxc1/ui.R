@@ -51,13 +51,14 @@ ui <- dashboardPage(
                     
                     fluidRow(width =  12,
                              
+                             
                              column(width =  12, 
                                     box(width = 12,
-                                        title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                        plotOutput('grafico4', width = "100%", height = "400px"), 
-                                        
+                                        title = "Mapa proyectos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        leafletOutput('mapa1', width = "100%", height = 400), 
                                     )
                              ),
+                             
                              
                              column(width =  12, 
                                     box(width = 12,
@@ -66,6 +67,16 @@ ui <- dashboardPage(
                                         #img(src='imagenOds.png', align = "right")
                                     )
                              ),
+                             
+                             
+                             column(width =  12, 
+                                    box(width = 12,
+                                        title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        plotOutput('grafico10', width = "100%", height = "400px")
+                                        
+                                    )
+                             ),
+                             
                              
                              column(width =  12, 
                                     box(width = 12,
@@ -77,15 +88,9 @@ ui <- dashboardPage(
                              
                              column(width =  12, 
                                     box(width = 12,
-                                        title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                        plotOutput('grafico10', width = "100%", height = "400px")
+                                        title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                        plotOutput('grafico4', width = "100%", height = "400px"), 
                                         
-                                    )
-                             ),
-                             column(width =  12, 
-                                    box(width = 12,
-                                        title = "Mapa proyectos", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                        leafletOutput('mapa1', width = "100%", height = 400), 
                                     )
                              ),
                              
@@ -100,11 +105,11 @@ ui <- dashboardPage(
             tabItem(tabName = "organizaciones",
                     fluidRow(column(width = 12,  textOutput("texto5")),
                              tags$style(type="text/css", "#texto5 { height: 50px; width: 100%; text-align:center; font-size: 30px; display: block;}"),
-                             selectInput("projects", "Organización:",
-                                         c("Todos",unique(as.character(data$Nombre_organizacion))))),
+                             column(width = 12, selectInput("projects", "Organización:",
+                                                c("Todos",unique(as.character(data$Nombre_organizacion)))))),
                     fluidRow(
                         box(width = 12,
-                            title = "Indicadores", collapsible = T, collapsed = F, status = "primary", solidHeader = TRUE,
+                            title = textOutput("texto10"), collapsible = T, collapsed = F, status = "primary", solidHeader = TRUE,
                             plotOutput('grafico2_4', width = "100%", height = "220px"), 
                             plotOutput('grafico2_5', width = "100%", height = "220px"),
                             plotOutput('grafico2_6', width = "100%", height = "220px"),
@@ -137,16 +142,16 @@ ui <- dashboardPage(
                     fluidRow(
                         column(width =  12, 
                                box(width = 12,
-                                   title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                   plotOutput('grafico5', width = "100%", height = "400px"), 
-                               ),
-                               box(width = 12,
-                                   title = "ODS y tematicas", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   title = textOutput("texto11"), collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico9', width = "100%", height = "600px"), 
                                ), 
                                box(width = 12,
-                                   title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   title = textOutput("texto12"), collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico11', width = "100%", height = "400px"), 
+                               ),
+                               box(width = 12,
+                                   title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('grafico5', width = "100%", height = "400px"), 
                                )
                         ),
                     ),
@@ -220,12 +225,13 @@ ui <- dashboardPage(
                     fluidRow(
                         column(width =  12, 
                                box(width = 12,
+                                   title = textOutput("texto13"), collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
+                                   plotOutput('grafico12', width = "100%", height = "400px"), 
+                               ),
+                               
+                               box(width = 12,
                                    title = "Costos anuales", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
                                    plotOutput('grafico6', width = "100%", height = "400px"), 
-                               ),
-                               box(width = 12,
-                                   title = "Porcentaje avance actividades", collapsible = T, collapsed = T, status = "primary", solidHeader = TRUE,
-                                   plotOutput('grafico12', width = "100%", height = "400px"), 
                                )
                         ),
                     ),

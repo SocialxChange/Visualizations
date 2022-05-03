@@ -780,7 +780,28 @@ server <- function(input, output) {
     
     
     user_dataTO <- reactive({
-        mapa
+        leaflet() %>% setView(lng=-70.64827, lat=-33.45694 , zoom=6) %>%
+            # Opcion para anadir imagenes o mapas de fondo (tiles)
+            addProviderTiles(provider = providers$CartoDB.Positron) %>%
+            # Funcion para agregar poligonos
+            addPolygons(data=map_regiones1,
+                        color="black",
+                        weight = 1,
+                        smoothFactor = 0.5,
+                        opacity = 1,
+                        fillOpacity = 0)%>%
+            # Funcion para agregar poligonos
+            addPolygons(data=map_comunas3,
+                        color = ~pal_num_comunas_pn(map_comunas3$Beneficiarios), 
+                        weight = 0.9,
+                        smoothFactor = 0.9,
+                        opacity = 1,
+                        fillOpacity = 0.9,
+                        highlightOptions = highlightOptions(color = "black", weight = 1, bringToFront = TRUE),
+                        label = ~labels_num_comunas_pn, labelOptions = labelOptions(direction = "auto")) %>%
+            addLegend(position = "bottomright", pal = pal_num_comunas_pn, values = map_comunas3$Beneficiarios, 
+                      title = "Número de beneficiarios por comuna")
+        
     })
     
     
